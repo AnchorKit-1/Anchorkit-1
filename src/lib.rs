@@ -48,3 +48,6 @@ mod pause_tests;
 
 #[cfg(all(test, feature = "stress-tests"))]
 mod attestor_stress_tests;
+
+#[cfg(all(test, feature = "testnet-integration"))]
+mod testnet_integration_tests;

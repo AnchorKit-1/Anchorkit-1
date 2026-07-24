@@ -16,6 +16,12 @@ crate-type = ["cdylib", "rlib"]
 # it doesn't run as part of a normal `cargo test`. Enable it explicitly with:
 #   cargo test --release --features stress-tests allow_list_scaling -- --nocapture
 stress-tests = []
+# Gates the real-network end-to-end suite (see
+# src/testnet_integration_tests.rs) so it never runs as part of a normal
+# `cargo test` -- it needs a funded testnet account, network access, and a
+# pre-built wasm artifact. Enable it explicitly with:
+#   ANCHORKIT_TESTNET_SOURCE=<identity> cargo test --features testnet-integration testnet_integration -- --nocapture
+testnet-integration = []
 
 [dependencies]
 soroban-sdk = "26.1.0"
