@@ -1,0 +1,46 @@
+# .pre-commit-config.yaml
+#
+# Runs cargo fmt --check and cargo clippy before every commit so that the
+# same checks enforced in CI are caught locally, before a PR is opened.
+#
+# Setup (one-time):
+#   pip install pre-commit
+#   pre-commit install
+#
+# Run manually against all files:
+#   pre-commit run --all-files
+#
+# See CONTRIBUTING.md for full details.
+
+repos:
+  - repo: local
+    hooks:
+      # ------------------------------------------------------------------
+      # cargo fmt --check
+      # Fast: rustfmt only parses; it never compiles. Runs only on the
+      # staged .rs files so it's near-instant even in a large workspace.
+      # ------------------------------------------------------------------
+      - id: cargo-fmt
+        name: cargo fmt --check
+        description: Verify that all staged Rust source files are formatted with rustfmt.
+        language: system
+        entry: cargo fmt --check --
+        types: [rust]
+        pass_filenames: true
+
+      # ------------------------------------------------------------------
+      # cargo clippy
+      # Must run on the whole workspace (pass_filenames: false) because
+      # Clippy needs to compile the crate to analyse it. --no-deps skips
+      # linting transitive dependencies, which keeps the hook fast on
+      # incremental builds (Cargo caches unchanged crates).
+      # -D warnings promotes every Clippy warning to an error, mirroring
+      # the CI behaviour so there are no surprises at PR time.
+      # ------------------------------------------------------------------
+      - id: cargo-clippy
+        name: cargo clippy
+        description: Run Clippy lints on the workspace. Fails on any warning (-D warnings).
+        language: system
+        entry: cargo clippy --workspace --no-deps -- -D warnings
+        types: [rust]
+        pass_filenames: false
