@@ -104,6 +104,8 @@ above captures nearly all the gas savings anyway). See
 
 ## Building and testing
 
+> For full contributor guidelines (test conventions, clippy expectations, PR checklist), see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ### Minimum toolchain
 
 There are two version floors in play:
