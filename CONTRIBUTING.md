@@ -46,6 +46,36 @@ cargo test --release --features stress-tests allow_list_scaling -- --nocapture
 
 `cargo test` fails on the `x86_64-pc-windows-gnu` toolchain with an `export ordinal too large` linker error — a PE/COFF format limitation triggered by the `soroban-sdk` test harness, not a bug in this project. It does **not** affect the `wasm32v1-none` build, and CI's Windows runner uses the unaffected `msvc` toolchain by default. See [`docs/platform-quirks.md`](docs/platform-quirks.md) for the full analysis, and [WINDOWS_SETUP.md](./WINDOWS_SETUP.md) for local workarounds.
 
+## Testnet integration tests
+
+`src/testnet_integration_tests.rs` deploys the contract to real Stellar
+testnet and runs a full `attest` -> `get_attestation` -> `revoke` cycle
+against it, using the [Stellar CLI](https://developers.stellar.org/docs/tools/cli)
+(`stellar`) to sign and submit every call. It's gated behind the
+`testnet-integration` feature and **never** runs as part of a normal
+`cargo test` — it needs network access and a funded account.
+
+Prerequisites:
+
+```bash
+# 1. Install the Stellar CLI, then create a funded testnet identity
+stellar keys generate anchorkit-testnet --network testnet --fund
+
+# 2. Build the wasm artifact the test deploys
+cargo build --target wasm32v1-none --release
+```
+
+Run it with:
+
+```bash
+ANCHORKIT_TESTNET_SOURCE=anchorkit-testnet \
+  cargo test --features testnet-integration testnet_integration -- --nocapture
+```
+
+Each run deploys a fresh, undeletable contract instance to testnet — use a
+disposable identity rather than one shared with other testnet work. See the
+module doc comment for the full rationale and cleanup story.
+
 ## Pre-commit hooks (recommended)
 
 The repo ships a `.pre-commit-config.yaml` that runs `cargo fmt --check` and
