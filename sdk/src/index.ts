@@ -11,3 +11,17 @@ export type {
   AuthResponse,
   Sep10Error,
 } from './types/sep10';
+
+// SEP-6 streaming
+export { Sep6StreamingService, Sep6StreamError } from './services/sep6Streaming';
+export { TERMINAL_STATUSES } from './types/sep6';
+export type {
+  Sep6TransactionStatus,
+  Sep6Transaction,
+  Sep6StreamConfig,
+  TransactionStreamEvent,
+  TransactionStreamError,
+  StreamHandle,
+  WatcherState,
+  AnchorStreamCapability,
+} from './types/sep6';
