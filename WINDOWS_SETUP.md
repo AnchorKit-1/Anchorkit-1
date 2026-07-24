@@ -66,7 +66,7 @@ cargo test --release --features stress-tests allow_list_scaling -- --nocapture
 If you're working from PowerShell (not WSL or Git Bash), note the following PowerShell-specific points:
 
 - Use `;` instead of `&&` to chain commands, e.g. `cargo build; cargo test` (PowerShell doesn't support `&&` the same way as bash on older Windows PowerShell versions; PowerShell 7+ does support it, but `;` works everywhere).
-- If a script in `scripts/` is a `.sh` file, run it via Git Bash or WSL — PowerShell cannot execute shell scripts directly.
+- If a script in `scripts/` only has a `.sh` file (no `.ps1` counterpart), run it via Git Bash or WSL — PowerShell cannot execute shell scripts directly. Scripts with a `.ps1` counterpart (e.g. `ci_preflight_check`) run natively — see [Running the CI preflight check](#running-the-ci-preflight-check) below.
 - Environment variables are set differently: use `$env:VAR_NAME = "value"` instead of `export VAR_NAME=value`.
 
 ## Known Windows Gotchas
@@ -161,18 +161,23 @@ Tests under `test_snapshots/` (admin, attest, attestor, pause, revoke, smoke) sh
 
 ## Running the CI preflight check
 
-Before submitting a PR, the project asks you to run `scripts/ci_preflight_check.sh`. This is a shell script, so PowerShell **cannot** run it directly. Use one of:
+Before submitting a PR, the project asks you to run the preflight check. On Windows, run the native PowerShell version — it checks the same Rust version and `wasm32v1-none` target requirements as the bash script, with matching exit codes and messages, and is what CI's Windows job runs:
 
-**Git Bash** (installed alongside Git for Windows):
-
-```bash
-./scripts/ci_preflight_check.sh
+```powershell
+./scripts/ci_preflight_check.ps1
 ```
 
-**WSL:**
+If PowerShell blocks the script with an "execution of scripts is disabled" error, your execution policy needs loosening for locally-authored scripts:
 
-```bash
-wsl bash scripts/ci_preflight_check.sh
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 ```
 
-If the script fails immediately with something like `bad interpreter` or `\r: command not found`, it's almost always the CRLF line-ending issue described above — make sure `core.autocrlf` is set to `input` and re-clone or re-normalize the repo.
+You can still run the bash version (`scripts/ci_preflight_check.sh`) via Git Bash or WSL if you prefer:
+
+```bash
+./scripts/ci_preflight_check.sh      # Git Bash
+wsl bash scripts/ci_preflight_check.sh  # WSL
+```
+
+If the bash script fails immediately with something like `bad interpreter` or `\r: command not found`, it's almost always the CRLF line-ending issue described above — make sure `core.autocrlf` is set to `input` and re-clone or re-normalize the repo.
