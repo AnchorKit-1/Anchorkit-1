@@ -39,13 +39,22 @@ jobs:
         with:
           shared-key: ${{ matrix.os }}
 
-      # The preflight script is a bash script; on Windows the GitHub-hosted
-      # runner provides Git Bash so this works across all three platforms.
-      - name: Run CI Preflight Check
+      # Linux/macOS run the bash script directly. Windows runs the
+      # PowerShell equivalent (scripts/ci_preflight_check.ps1) as
+      # first-class tooling rather than relying on the runner's bundled Git
+      # Bash -- see CONTRIBUTING.md for why both variants exist and are
+      # kept in sync.
+      - name: Run CI Preflight Check (bash)
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           chmod +x ./scripts/ci_preflight_check.sh
           ./scripts/ci_preflight_check.sh
+
+      - name: Run CI Preflight Check (PowerShell)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/ci_preflight_check.ps1
 
       # NOTE (Windows): earlier CI ran a bash-installed x86_64-pc-windows-gnu
       # toolchain, which hit "export ordinal too large" -- the soroban-sdk

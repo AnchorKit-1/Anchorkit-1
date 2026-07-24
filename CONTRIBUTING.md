@@ -127,15 +127,14 @@ Use this sparingly — CI will still enforce the same checks.
 
 ## Local CI Preflight Check
 
-To verify that your toolchain and target are correctly set up before submitting a PR, run the preflight script:
+To verify that your toolchain and target are correctly set up before submitting a PR, run the preflight script for your shell:
 
-```bash
-./scripts/ci_preflight_check.sh
-```
+| Shell | Command |
+|---|---|
+| bash (Linux, macOS, Git Bash, WSL) | `./scripts/ci_preflight_check.sh` |
+| PowerShell (Windows) | `./scripts/ci_preflight_check.ps1` |
 
-> On Windows, run this via **Git Bash** or **WSL** — PowerShell cannot execute `.sh` scripts directly. See [WINDOWS_SETUP.md](./WINDOWS_SETUP.md) for details.
-
-This checks that your installed Rust version meets the minimum floor and that the `wasm32v1-none` target is installed.
+Both scripts run the same checks — installed Rust version against the minimum floor, and that the `wasm32v1-none` target is installed — and exit non-zero with the same error messages on failure, so either is a valid local signal regardless of which shell you use. CI runs the bash variant on Linux/macOS and the PowerShell variant on Windows (`.github/workflows/ci.yml`), so both are exercised on every push/PR. See [WINDOWS_SETUP.md](./WINDOWS_SETUP.md) for PowerShell-specific notes.
 
 ## Test Conventions
 
