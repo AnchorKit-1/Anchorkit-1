@@ -14,11 +14,21 @@ export type {
 
 // SEP-6 streaming
 export { Sep6StreamingService, Sep6StreamError } from './services/sep6Streaming';
-export { TERMINAL_STATUSES } from './types/sep6';
+export { TransactionStream } from './services/sep6Stream';
+export {
+  isTerminalStatus,
+  TERMINAL_STATUSES,
+} from './types/sep6';
 export type {
   Sep6TransactionStatus,
   Sep6Transaction,
+  Sep6TransactionResponse,
+  Sep6TransactionsResponse,
   Sep6StreamConfig,
+  Sep6StatusUpdate,
+  StreamCloseEvent,
+  StreamCloseReason,
+  StreamMode,
   TransactionStreamEvent,
   TransactionStreamError,
   StreamHandle,
