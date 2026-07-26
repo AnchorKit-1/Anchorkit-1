@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches: [ main ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ main ]
 
@@ -72,3 +73,71 @@ jobs:
 
       - name: Build deployable contract (wasm32v1-none)
         run: cargo build --target wasm32v1-none --release
+
+  # ---------------------------------------------------------------------------
+  # wasm-artifact: build the optimized release wasm, report its size in the
+  # job summary, and upload it as a downloadable build artifact.
+  #
+  # Runs on every push to main and on every version tag (v*) so that both
+  # trunk builds and release builds produce a downloadable artifact.
+  # Only runs on ubuntu-latest — wasm32v1-none is a cross-compile target and
+  # the output is platform-independent, so a single runner is sufficient.
+  # ---------------------------------------------------------------------------
+  wasm-artifact:
+    name: Build & upload release wasm artifact
+    runs-on: ubuntu-latest
+    # Only on pushes (not PRs) — avoids uploading artifacts for every draft PR
+    # while still catching every merge to main and every release tag.
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain with WASM target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32v1-none
+
+      # Keyed separately from the test-matrix cache (shared-key: ubuntu-latest)
+      # so a wasm release build never evicts or collides with a test-debug build.
+      - name: Cache cargo registry and build artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: wasm-release
+
+      # Build with the [profile.release] settings already in Cargo.toml:
+      #   opt-level = "z"  (size-optimised)
+      #   lto = true       (link-time optimisation across all crates)
+      #   strip = true     (strips debug symbols from the output binary)
+      #   codegen-units = 1 (maximises LTO effectiveness)
+      # This is the same command documented in README.md and used locally.
+      - name: Build release wasm (wasm32v1-none)
+        run: cargo build --target wasm32v1-none --release
+
+      # Report the artifact size in the job summary so reviewers can see size
+      # regressions at a glance without downloading the artifact.
+      - name: Report wasm size in job summary
+        shell: bash
+        run: |
+          WASM_PATH="target/wasm32v1-none/release/anchorkit.wasm"
+          SIZE_BYTES=$(wc -c < "$WASM_PATH")
+          SIZE_KB=$(echo "scale=2; $SIZE_BYTES / 1024" | bc)
+          echo "### Wasm artifact size" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| File | Size |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| \`$WASM_PATH\` | ${SIZE_KB} KB (${SIZE_BYTES} bytes) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Built with \`--release\` profile: \`opt-level=z\`, \`lto=true\`, \`strip=true\`." >> "$GITHUB_STEP_SUMMARY"
+
+      # Upload the wasm file so it can be downloaded from the Actions run page.
+      # Retention is kept at the GitHub default (90 days).  The artifact name
+      # includes the short SHA so builds from different commits are
+      # distinguishable in the Actions UI.
+      - name: Upload wasm artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: anchorkit-${{ github.ref_name }}-${{ github.sha }}
+          path: target/wasm32v1-none/release/anchorkit.wasm
+          if-no-files-found: error
