@@ -19,6 +19,11 @@ pub enum CliError {
     Simulation(String),
     /// Building or parsing the XDR transaction/result failed.
     Xdr(String),
+    /// A domain string failed syntactic validation.
+    InvalidDomain(String),
+    /// The anchor returned HTTP 404/405 for the long-poll endpoint, indicating
+    /// it doesn't support the `long_poll_timeout` extension.
+    LongPollUnsupported,
 }
 
 impl fmt::Display for CliError {
@@ -31,6 +36,12 @@ impl fmt::Display for CliError {
             CliError::Rpc(msg) => write!(f, "RPC request failed: {msg}"),
             CliError::Simulation(msg) => write!(f, "contract call failed: {msg}"),
             CliError::Xdr(msg) => write!(f, "XDR encoding error: {msg}"),
+            CliError::InvalidDomain(domain) => {
+                write!(f, "invalid domain '{domain}'")
+            }
+            CliError::LongPollUnsupported => {
+                write!(f, "anchor does not support long-poll")
+            }
         }
     }
 }
