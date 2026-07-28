@@ -3,3 +3,7 @@ Cargo.lock.bak
 *.swp
 /mutants.out
 /mutants.out.old
+
+# Fuzzing artifacts and crashes (keep fuzz target definitions)
+/fuzz/target/
+/fuzz/artifacts/
