@@ -76,6 +76,7 @@ impl IdempotencyStore {
         .map_err(|e| WebhookError::StorageError(e.to_string()))?;
 
         Ok(row.and_then(|r| {
+            use sqlx::Row;
             let response: String = r.try_get("response").ok()?;
             serde_json::from_str(&response).ok()
         }))

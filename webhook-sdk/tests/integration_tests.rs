@@ -116,8 +116,7 @@ async fn test_dead_letter_inspection_via_monitor() {
         let dead_letter =
             DeadLetter::from_delivery(delivery, "Max retries exceeded".to_string());
         monitor
-            .dlq
-            .store(&dead_letter)
+            .store_dead_letter(&dead_letter)
             .await
             .expect("Failed to store dead-letter");
     }
@@ -175,8 +174,7 @@ async fn test_dead_letter_retrieval_by_id() {
     let dead_letter_id = dead_letter.id.clone();
 
     monitor
-        .dlq
-        .store(&dead_letter)
+        .store_dead_letter(&dead_letter)
         .await
         .expect("Failed to store");
 

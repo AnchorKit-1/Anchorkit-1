@@ -153,8 +153,8 @@ impl DeadLetterQueue {
             attempt: attempt as u32,
             error,
             created_at: chrono::DateTime::parse_from_rfc3339(&created_at)
-                .unwrap_or_else(|_| chrono::Utc::now().with_timezone(&chrono::Utc))
-                .with_timezone(&chrono::Utc),
+                .map(|dt| dt.with_timezone(&chrono::Utc))
+                .unwrap_or_else(|_| chrono::Utc::now()),
             last_attempted_at: last_attempted_at.and_then(|dt| {
                 chrono::DateTime::parse_from_rfc3339(&dt)
                     .ok()
@@ -168,8 +168,8 @@ impl DeadLetterQueue {
             delivery,
             reason,
             dead_lettered_at: chrono::DateTime::parse_from_rfc3339(&dead_lettered_at)
-                .unwrap_or_else(|_| chrono::Utc::now().with_timezone(&chrono::Utc))
-                .with_timezone(&chrono::Utc),
+                .map(|dt| dt.with_timezone(&chrono::Utc))
+                .unwrap_or_else(|_| chrono::Utc::now()),
         }
     }
 }
