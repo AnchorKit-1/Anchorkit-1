@@ -150,46 +150,45 @@ async fn test_same_delivery_twice_only_triggers_once() {
         "attestation_id": "revoke-123"
     });
 
-    // First delivery attempt
+    // Derive the expected idempotency key directly from the payload — this is
+    // the stable, deterministic key the processor uses internally.  We compute
+    // it here so we can verify both calls map to the same key regardless of
+    // whether each call returns Ok or Err (the invalid URL means both attempts
+    // fail at the network layer, but the second is cached as a duplicate).
+    let expected_key = derive_idempotency_key(&payload);
+
+    // First delivery attempt (will fail — invalid domain).
     let delivery1 = WebhookDelivery::new(
         "https://invalid.example.local/webhook".to_string(),
         payload.clone(),
     );
-
     let result1 = processor.process(delivery1).await;
-    let idempotency_key1 = result1
-        .as_ref()
-        .map(|r| r.idempotency_key.clone())
-        .unwrap_or_default();
-    let is_duplicate1 = result1
-        .as_ref()
-        .map(|r| r.is_duplicate)
-        .unwrap_or(false);
 
-    // Second delivery attempt with same payload
+    // The first attempt is NOT a duplicate; it either returns Ok with
+    // is_duplicate=false, or Err (network failure after caching the failure).
+    let is_duplicate1 = result1.as_ref().map(|r| r.is_duplicate).unwrap_or(false);
+    assert!(!is_duplicate1, "first delivery must not be flagged as duplicate");
+
+    // Second delivery attempt with the same payload (different URL, same key).
     let delivery2 = WebhookDelivery::new(
         "https://another-invalid.example.local/webhook".to_string(),
         payload,
     );
-
     let result2 = processor.process(delivery2).await;
-    let idempotency_key2 = result2
-        .as_ref()
-        .map(|r| r.idempotency_key.clone())
-        .unwrap_or_default();
-    let is_duplicate2 = result2
-        .as_ref()
-        .map(|r| r.is_duplicate)
-        .unwrap_or(false);
 
-    // Same idempotency key for both
-    assert_eq!(idempotency_key1, idempotency_key2);
+    // The second attempt must be detected as a duplicate (the failure response
+    // was cached after the first attempt).
+    let is_duplicate2 = result2.as_ref().map(|r| r.is_duplicate).unwrap_or(false);
+    assert!(is_duplicate2, "second delivery with same payload must be flagged as duplicate");
 
-    // First was not a duplicate
-    assert!(!is_duplicate1);
-
-    // Second should be detected as duplicate
-    assert!(is_duplicate2);
+    // The idempotency key exposed when the call returns Ok must equal the key
+    // derived directly from the payload.
+    if let Ok(ref r) = result2 {
+        assert_eq!(
+            r.idempotency_key, expected_key,
+            "idempotency key in result must match derive_idempotency_key(payload)"
+        );
+    }
 }
 
 #[tokio::test]

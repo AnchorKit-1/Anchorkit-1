@@ -1,5 +1,5 @@
 use crate::delivery::WebhookDeliverer;
-use crate::errors::{Result, WebhookError};
+use crate::errors::Result;
 use crate::idempotency::{derive_idempotency_key, IdempotencyStore};
 use crate::types::WebhookDelivery;
 

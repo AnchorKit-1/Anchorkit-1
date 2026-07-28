@@ -13,6 +13,12 @@ impl WebhookMonitor {
         Self { dlq }
     }
 
+    /// Stores a dead-lettered delivery.  Provided so callers (including tests)
+    /// can populate the queue without needing direct access to the inner DLQ.
+    pub async fn store_dead_letter(&self, dead_letter: &DeadLetter) -> Result<()> {
+        self.dlq.store(dead_letter).await
+    }
+
     /// Retrieves a dead-lettered delivery by ID.
     pub async fn get_dead_letter(&self, id: &str) -> Result<Option<DeadLetter>> {
         self.dlq.get(id).await
@@ -72,7 +78,7 @@ mod tests {
             );
             let dead_letter =
                 DeadLetter::from_delivery(delivery, "Max retries exceeded".to_string());
-            monitor.dlq.store(&dead_letter).await.unwrap();
+            monitor.store_dead_letter(&dead_letter).await.unwrap();
         }
 
         let report = monitor
