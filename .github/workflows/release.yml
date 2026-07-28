@@ -1,0 +1,174 @@
+name: Release
+
+# ---------------------------------------------------------------------------
+# Triggered exclusively on version tags.
+#
+# Production release:  v<major>.<minor>.<patch>          e.g. v0.2.0
+# Pre-release / dry-run: v<major>.<minor>.<patch>-<pre>  e.g. v0.2.0-rc.1
+#
+# Tag format, release-notes convention, and a dry-run guide are documented
+# in docs/release.md.
+# ---------------------------------------------------------------------------
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'        # production releases
+      - 'v[0-9]+.[0-9]+.[0-9]+-*'      # pre-releases (rc, beta, alpha, …)
+
+# Explicit, minimal permissions — the default GITHUB_TOKEN only needs to
+# write to releases; all other scopes are left at their read-only default.
+permissions:
+  contents: write  # needed to create the GitHub release and upload assets
+
+jobs:
+  # -------------------------------------------------------------------------
+  # build-and-release
+  #
+  # Builds the optimised WASM artifact on a clean Ubuntu runner, computes a
+  # SHA-256 checksum, and publishes both files as a GitHub release.
+  # -------------------------------------------------------------------------
+  build-and-release:
+    name: Build WASM & publish GitHub release
+    runs-on: ubuntu-latest
+
+    steps:
+      # -----------------------------------------------------------------------
+      # 1. Source
+      # -----------------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch the full history so `git log` for the release body works.
+          fetch-depth: 0
+
+      # -----------------------------------------------------------------------
+      # 2. Toolchain
+      # -----------------------------------------------------------------------
+      - name: Install Rust toolchain with WASM target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32v1-none
+
+      # Reuse cached registry/build objects when the lockfile hasn't changed.
+      # Keyed separately from the CI test-matrix cache so a release build
+      # never evicts a debug-test build (or vice-versa).
+      - name: Cache cargo registry and build artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: wasm-release
+
+      # -----------------------------------------------------------------------
+      # 3. Build
+      #
+      # Builds with the release profile already in Cargo.toml:
+      #   opt-level = "z"   – size-optimised
+      #   lto = true        – whole-program link-time optimisation
+      #   strip = true      – strips debug/symbol sections from the output
+      #   codegen-units = 1 – maximises LTO effectiveness
+      # -----------------------------------------------------------------------
+      - name: Build release WASM (wasm32v1-none)
+        run: cargo build --target wasm32v1-none --release
+
+      # -----------------------------------------------------------------------
+      # 4. Stage artifacts
+      #
+      # Copy the wasm file to a predictable staging path that includes the
+      # version tag, then compute a SHA-256 checksum.
+      # -----------------------------------------------------------------------
+      - name: Stage artifacts and compute checksum
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          TAG="${GITHUB_REF_NAME}"
+          WASM_SRC="target/wasm32v1-none/release/anchorkit.wasm"
+          STAGING_DIR="release-staging"
+          WASM_DEST="${STAGING_DIR}/anchorkit-${TAG}.wasm"
+          CHECKSUM_FILE="${STAGING_DIR}/anchorkit-${TAG}.sha256"
+
+          mkdir -p "$STAGING_DIR"
+          cp "$WASM_SRC" "$WASM_DEST"
+
+          # sha256sum produces "<hash>  <filename>" lines; strip the directory
+          # prefix so the checksum file contains only the bare filename — makes
+          # verification straightforward: `sha256sum -c anchorkit-<tag>.sha256`
+          (cd "$STAGING_DIR" && sha256sum "anchorkit-${TAG}.wasm" > "anchorkit-${TAG}.sha256")
+
+          # Print both files for the run log.
+          echo "=== Staged artifacts ==="
+          ls -lh "$STAGING_DIR"
+          echo ""
+          echo "=== SHA-256 checksum ==="
+          cat "$CHECKSUM_FILE"
+
+          # Expose paths to later steps via the job environment.
+          echo "WASM_DEST=${WASM_DEST}"         >> "$GITHUB_ENV"
+          echo "CHECKSUM_FILE=${CHECKSUM_FILE}" >> "$GITHUB_ENV"
+          echo "TAG=${TAG}"                     >> "$GITHUB_ENV"
+
+      # -----------------------------------------------------------------------
+      # 5. Job summary
+      #
+      # Write a human-readable build summary to the workflow run page so
+      # reviewers can verify sizes and checksums without downloading files.
+      # -----------------------------------------------------------------------
+      - name: Write job summary
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          SIZE_BYTES=$(wc -c < "$WASM_DEST")
+          SIZE_KB=$(echo "scale=2; $SIZE_BYTES / 1024" | bc)
+          CHECKSUM=$(awk '{print $1}' "$CHECKSUM_FILE")
+
+          echo "### Release build summary — ${TAG}" >> "$GITHUB_STEP_SUMMARY"
+          echo ""                                   >> "$GITHUB_STEP_SUMMARY"
+          echo "| | |"                              >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|"                           >> "$GITHUB_STEP_SUMMARY"
+          echo "| Tag | \`${TAG}\` |"               >> "$GITHUB_STEP_SUMMARY"
+          echo "| WASM file | \`${WASM_DEST##*/}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Size | ${SIZE_KB} KB (${SIZE_BYTES} bytes) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| SHA-256 | \`${CHECKSUM}\` |"      >> "$GITHUB_STEP_SUMMARY"
+          echo ""                                   >> "$GITHUB_STEP_SUMMARY"
+          echo "Built with \`--release\` profile: \`opt-level=z\`, \`lto=true\`, \`strip=true\`, \`codegen-units=1\`." >> "$GITHUB_STEP_SUMMARY"
+
+      # -----------------------------------------------------------------------
+      # 6. Determine whether this is a pre-release
+      #
+      # A tag that contains a pre-release segment (hyphen + label) is treated
+      # as a GitHub pre-release.  The expression matches anything after the
+      # first `-`, so v0.2.0-rc.1, v0.2.0-beta, v0.2.0-alpha.2 all qualify.
+      # -----------------------------------------------------------------------
+      - name: Detect pre-release tag
+        id: prerelease
+        shell: bash
+        run: |
+          if [[ "${TAG}" == *-* ]]; then
+            echo "is_prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # -----------------------------------------------------------------------
+      # 7. Publish GitHub release
+      #
+      # Creates (or updates) the GitHub release for this tag, attaches both
+      # the wasm file and its checksum file, and uses the tag annotation (if
+      # present) or a standard template as the release body.
+      #
+      # --generate-notes uses GitHub's auto-generated release notes, seeded
+      # from merged PR titles and labels since the previous tag.  The manually
+      # crafted release notes guidance in docs/release.md describes how to
+      # supplement these with a human-authored body if desired.
+      # -----------------------------------------------------------------------
+      - name: Create GitHub release and upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          name: ${{ env.TAG }}
+          prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
+          generate_notes: true
+          files: |
+            ${{ env.WASM_DEST }}
+            ${{ env.CHECKSUM_FILE }}
+          fail_on_unmatched_files: true
