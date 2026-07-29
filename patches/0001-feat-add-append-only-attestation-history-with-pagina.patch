@@ -1,0 +1,831 @@
+From 93734261717863dc1a8a7ee39cde0a0ead06bb69 Mon Sep 17 00:00:00 2001
+From: AnchorKit Developer <dev@anchorkit.dev>
+Date: Wed, 29 Jul 2026 01:10:11 +0100
+Subject: [PATCH] feat: add append-only attestation history with pagination
+
+- Add AttestationSeq and AttestationHistory DataKey variants
+- Add HistoryEntry struct for immutable snapshots
+- Implement push_attestation_history and list_attestation_history with pagination
+- Preserve backward compatibility for get_attestation and is_valid
+- Add comprehensive test coverage for pagination and edge cases
+- Document storage rent tradeoff with cost analysis
+---
+ docs/attestation-history-rent-cost.md | 181 +++++++++++++
+ src/attestation_history_tests.rs      | 350 ++++++++++++++++++++++++++
+ src/contract.rs                       |  31 ++-
+ src/errors.rs                         |   1 +
+ src/lib.rs                            |   5 +-
+ src/storage.rs                        | 121 ++++++++-
+ src/types.rs                          |  22 ++
+ 7 files changed, 707 insertions(+), 4 deletions(-)
+ create mode 100644 docs/attestation-history-rent-cost.md
+ create mode 100644 src/attestation_history_tests.rs
+
+diff --git a/docs/attestation-history-rent-cost.md b/docs/attestation-history-rent-cost.md
+new file mode 100644
+index 0000000..b9bb489
+--- /dev/null
++++ b/docs/attestation-history-rent-cost.md
+@@ -0,0 +1,181 @@
++# Attestation history storage rent cost analysis
++
++## Goal
++
++Document the storage rent cost tradeoff of maintaining an append-only history of
++attestations, and provide guidance for operators on storage budgeting.
++
++## Overview: History vs. Overwrite
++
++Previously, `attest` calls would simply overwrite any prior attestation for a
++given (subject, attestation_type) pair. This meant past attestations were lost
++forever once a new one was submitted.
++
++The new append-only history feature preserves all past attestations so they
++remain queryable via `list_attestation_history` with pagination support. This
++enables:
++
++- Auditing: view the complete timeline of decisions for a subject
++- Debugging: investigate why a previous attestation was replaced
++- Compliance: retain evidence of all state changes for regulatory requirements
++
++**The tradeoff: This comes at a real ongoing storage rent cost.**
++
++Unlike the current attestation storage (which is a single entry per
++(subject, type) pair that gets overwritten), the history grows by one entry for
++every `attest` or `revoke` call. Each entry is a separate persistent storage
++entry that incurs its own rent per ledger. This is not implicit — it's a
++meaningful cost that should be budgeted explicitly.
++
++## The rent model
++
++See `docs/storage-rent-cost-analysis.md` for the full Soroban rent mechanics.
++In brief:
++
++- Each persistent storage entry is billed for rent proportional to:
++  - `S`: the entry's size in bytes (fixed for a given Rust struct)
++  - `R`: the network's per-byte-per-ledger rent rate (a governance parameter)
++  - `extend_to`: the number of ledgers bought in the last `extend_ttl` call
++- Total rent for an entry = `R × S × extend_to` stroops per bump
++
++For history entries, `extend_to` is scaled to the attestation's remaining
++lifetime (see `storage::attestation_ttl_window`), so short-lived attestations
++pay less rent per history entry than long-lived ones.
++
++## Worked cost comparison: current vs. history
++
++Let's model the rent impact of storing history for a typical KYC/payment
++workload.
++
++### Setup: Assumptions
++
++- Workload: 1 million subjects, each with 1 attestation_type
++- Typical TTL: 90 days (a common re-verification window)
++- Update rate: 1 update per subject every 180 days (2 updates per subject per year)
++- Entry size: ~150 bytes for an `Attestation` struct (attestor, subject, type,
++  hash, timestamps, status)
++- Network rent rate `R`: 4.2 stroops per byte per ledger (current mainnet, via
++  Stellar docs; this may change with governance)
++
++### Scenario 1: Current (no history)
++
++Each subject has exactly one attestation entry that gets overwritten on update.
++Storage rent is paid only when entries are first written or renewed.
++
++- Entries: 1 million
++- Rent per entry per 90-day update cycle:
++  - `extend_to` = 90 days = 17,280 ledgers (see `storage::LEDGERS_PER_DAY`)
++  - Rent = 4.2 × 150 × 17,280 = **~10.9M stroops per entry per 90 days**
++- Total for 1M entries over 2 years (8 cycles):
++  - Cost = 1M × 10.9M × 8 = **87.2 trillion stroops** (~8.7 billion stroops/year)
++
++### Scenario 2: With 2-year history (4 updates per subject)
++
++Each subject accumulates 4 attestation history entries over 2 years.
++
++- Total entries: 1M subjects × 4 entries = 4 million
++- Rent per entry: same as above, scaled to its remaining lifetime
++  - For simplicity, assume all entries live for their full 90-day window
++  - Rent per entry = ~10.9M stroops per 90 days
++- Total for 4M entries over 2 years:
++  - Cost = 4M × 10.9M × 8 = **348.8 trillion stroops** (~34.9 billion stroops/year)
++
++### Cost impact
++
++- Current (no history): ~8.7B stroops/year
++- With history: ~34.9B stroops/year
++- **Multiplier: ~4x** (exactly the number of updates per subject over 2 years)
++
++In other words, **keeping history costs roughly as much as storing N copies of
++the entry where N is the number of updates.** This is expected — each update
++creates a new entry that must be stored and rented forever (or until it expires,
++if you implement TTL policies for history).
++
++For a large attestation platform serving many subjects with frequent updates,
++this can become a significant operational cost. See "Cost optimization strategies"
++below.
++
++## Cost optimization strategies
++
++### 1. Baseline: Accept the cost
++
++If audit trails and compliance requirements justify the cost, simply budget for
++the 4x (or higher, depending on update frequency) multiplier and maintain the
++full history forever.
++
++### 2. History entry TTL policies
++
++History entries are currently stored forever (they only expire when the
++attestation's logical TTL expires). You could instead implement a shorter
++effective TTL for *old* history entries:
++
++- Store a separate `HistoryEntryTTL(subject, type, seq)` entry in instance
++  storage (cheaper than persistent) with an explicit archival timestamp
++- Periodically prune entries older than, say, 1 year
++- This trades off queryability of ancient history for lower rent
++
++Example: keeping only the last 12 months of history for a subject reduces the
++above scenario from 4M total entries to ~2M (assuming uniform distribution of
++updates), cutting the cost to ~17.5B stroops/year (~2x current baseline).
++
++### 3. Separate history contract
++
++For very large workloads, you could move history storage to a separate contract
++or off-chain system:
++
++- The main contract still stores the current attestation (unchanged)
++- History is written to a read-only off-chain log or archive contract
++- Consumers who need history query the archive; most queries still use the main
++  contract's faster, cheaper current-only read path
++
++This entirely decouples history cost from the main contract's operational budget.
++
++### 4. Aggregated history summaries
++
++Instead of storing every single update, periodically snapshot aggregate history:
++
++- Store a summary entry (e.g., "this subject had 3 attestations in Q1") instead
++  of 3 individual entries
++- Consumers get high-level history without per-entry rent costs
++
++This reduces rent linearly with the aggregation factor.
++
++## Monitoring and alerts
++
++To avoid surprise storage cost growth, consider instrumenting:
++
++- `get_attestation_count()` — tracks total attestations submitted (already
++  included)
++- New: `list_attestation_history(subject, type, 1, 1, false)` on a sample of
++  subjects to estimate average history length per subject
++- Multiply to project storage rent impact: `subjects × avg_history_length ×
++  entry_rent_per_ledger`
++
++Alert if:
++- History length grows faster than expected (suggests higher-than-anticipated
++  update rates)
++- Average entry rent per ledger increases (might indicate longer TTLs being
++  used, or network rent rate changes)
++
++## Decision: Why keep full history by default?
++
++Three reasons:
++
++1. **Auditability is hard to retrofit.** If you delete history now and later
++   need it for compliance, you can't recover it. Starting with full history lets
++   operators make that choice later (via pruning strategies above) without
++   losing data retroactively.
++
++2. **Cost is predictable and linear.** Unlike surprise runtime bugs or network
++   changes, storage cost scales predictably with the number of updates. It's a
++   known tradeoff operators can budget for.
++
++3. **History is queryable on demand.** Operators pay only once per entry, then
++   can query it many times for free (within the entry's TTL). The upfront cost
++   is amortized across all queries.
++
++## See also
++
++- `docs/storage-rent-cost-analysis.md` — detailed Soroban rent mechanics
++- `src/storage.rs` — TTL constants and rent window calculations
++- `src/contract.rs::list_attestation_history` — pagination API docs
+diff --git a/src/attestation_history_tests.rs b/src/attestation_history_tests.rs
+new file mode 100644
+index 0000000..5de04a4
+--- /dev/null
++++ b/src/attestation_history_tests.rs
+@@ -0,0 +1,350 @@
++use soroban_sdk::testutils::Address as _;
++use soroban_sdk::{Address, Bytes, Symbol};
++
++use crate::errors::Error;
++use crate::hash::compute_payload_hash;
++use crate::test_util::setup;
++use crate::types::AttestationStatus;
++
++const ONE_DAY: u64 = 24 * 60 * 60;
++
++#[test]
++fn history_preserved_when_attestation_overwritten() {
++    let s = setup();
++    let attestor = Address::generate(&s.env);
++    let subject = Address::generate(&s.env);
++    s.client.add_attestor(&attestor);
++
++    let kind = Symbol::new(&s.env, "kyc_approved");
++    let first_hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"first"));
++    let second_hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"second"));
++
++    // Submit first attestation
++    s.client.attest(&attestor, &subject, &kind, &first_hash, &ONE_DAY);
++
++    // Submit second attestation (overwrites in current storage)
++    s.client.attest(&attestor, &subject, &kind, &second_hash, &ONE_DAY);
++
++    // get_attestation returns the latest (second)
++    let latest = s.client.get_attestation(&subject, &kind);
++    assert_eq!(latest.payload_hash, second_hash);
++
++    // But history contains both entries
++    let history = s
++        .client
++        .list_attestation_history(&subject, &kind, 1, 10, false)
++        .unwrap();
++    assert_eq!(history.len(), 2);
++    assert_eq!(history.get(0).unwrap().payload_hash, first_hash);
++    assert_eq!(history.get(0).unwrap().sequence, 1);
++    assert_eq!(history.get(1).unwrap().payload_hash, second_hash);
++    assert_eq!(history.get(1).unwrap().sequence, 2);
++}
++
++#[test]
++fn revoke_creates_new_history_entry() {
++    let s = setup();
++    let attestor = Address::generate(&s.env);
++    let subject = Address::generate(&s.env);
++    s.client.add_attestor(&attestor);
++
++    let kind = Symbol::new(&s.env, "kyc_approved");
++    let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"payload"));
++
++    s.client.attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
++
++    // Before revoke, entry is Active
++    let history1 = s
++        .client
++        .list_attestation_history(&subject, &kind, 1, 10, false)
++        .unwrap();
++    assert_eq!(history1.len(), 1);
++    assert_eq!(history1.get(0).unwrap().status, AttestationStatus::Active);
++
++    s.client.revoke(&attestor, &subject, &kind);
++
++    // After revoke, latest entry in current storage is Revoked
++    let latest = s.client.get_attestation(&subject, &kind);
++    assert_eq!(latest.status, AttestationStatus::Revoked);
++
++    // But history now has two entries: original (Active) and revoked (Revoked)
++    let history2 = s
++        .client
++        .list_attestation_history(&subject, &kind, 1, 10, false)
++        .unwrap();
++    assert_eq!(history2.len(), 2);
++    assert_eq!(history2.get(0).unwrap().status, AttestationStatus::Active);
++    assert_eq!(history2.get(0).unwrap().sequence, 1);
++    assert_eq!(history2.get(1).unwrap().status, AttestationStatus::Revoked);
++    assert_eq!(history2.get(1).unwrap().sequence, 2);
++}
++
++#[test]
++fn pagination_oldest_first() {
++    let s = setup();
++    let attestor = Address::generate(&s.env);
++    let subject = Address::generate(&s.env);
++    s.client.add_attestor(&attestor);
++
++    let kind = Symbol::new(&s.env, "kyc_approved");
++
++    // Submit 5 attestations
++    for i in 0..5 {
++        let payload = format!("payload-{}", i);
++        let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, payload.as_bytes()));
++        s.client.attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
++    }
++
++    // Get first 2 entries (oldest first)
++    let page1 = s
++        .client
++        .list_attestation_history(&subject, &kind, 1, 2, false)
++        .unwrap();
++    assert_eq!(page1.len(), 2);
++    assert_eq!(page1.get(0).unwrap().sequence, 1);
++    assert_eq!(page1.get(1).unwrap().sequence, 2);
++
++    // Get next 2 entries starting from seq 3
++    let page2 = s
++        .client
++        .list_attestation_history(&subject, &kind, 3, 2, false)
++        .unwrap();
++    assert_eq!(page2.len(), 2);
++    assert_eq!(page2.get(0).unwrap().sequence, 3);
++    assert_eq!(page2.get(1).unwrap().sequence, 4);
++
++    // Get remaining entries
++    let page3 = s
++        .client
++        .list_attestation_history(&subject, &kind, 5, 2, false)
++        .unwrap();
++    assert_eq!(page3.len(), 1);
++    assert_eq!(page3.get(0).unwrap().sequence, 5);
++}
++
++#[test]
++fn pagination_newest_first() {
++    let s = setup();
++    let attestor = Address::generate(&s.env);
++    let subject = Address::generate(&s.env);
++    s.client.add_attestor(&attestor);
++
++    let kind = Symbol::new(&s.env, "kyc_approved");
++
++    // Submit 5 attestations
++    for i in 0..5 {
++        let payload = format!("payload-{}", i);
++        let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, payload.as_bytes()));
++        s.client.attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
++    }
++
++    // Get first 2 entries from end (newest first)
++    let page1 = s
++        .client
++        .list_attestation_history(&subject, &kind, 5, 2, true)
++        .unwrap();
++    assert_eq!(page1.len(), 2);
++    assert_eq!(page1.get(0).unwrap().sequence, 5);
++    assert_eq!(page1.get(1).unwrap().sequence, 4);
++
++    // Get next 2 entries
++    let page2 = s
++        .client
++        .list_attestation_history(&subject, &kind, 3, 2, true)
++        .unwrap();
++    assert_eq!(page2.len(), 2);
++    assert_eq!(page2.get(0).unwrap().sequence, 3);
++    assert_eq!(page2.get(1).unwrap().sequence, 2);
++
++    // Get remaining
++    let page3 = s
++        .client
++        .list_attestation_history(&subject, &kind, 1, 2, true)
++        .unwrap();
++    assert_eq!(page3.len(), 1);
++    assert_eq!(page3.get(0).unwrap().sequence, 1);
++}
++
++#[test]
++fn empty_history_for_nonexistent_attestation() {
++    let s = setup();
++    let subject = Address::generate(&s.env);
++    let kind = Symbol::new(&s.env, "kyc_approved");
++
++    let history = s
++        .client
++        .list_attestation_history(&subject, &kind, 1, 10, false)
++        .unwrap();
++    assert_eq!(history.len(), 0);
++}
++
++#[test]
++fn pagination_limit_zero_fails() {
++    let s = setup();
++    let attestor = Address::generate(&s.env);
++    let subject = Address::generate(&s.env);
++    s.client.add_attestor(&attestor);
++
++    let kind = Symbol::new(&s.env, "kyc_approved");
++    let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"payload"));
++    s.client.attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
++
++    // Limit of 0 should fail
++    assert_eq!(
++        s.client
++            .try_list_attestation_history(&subject, &kind, 1, 0, false),
++        Err(Ok(Error::InvalidPagination))
++    );
++}
++
++#[test]
++fn pagination_start_seq_beyond_end_returns_empty() {
++    let s = setup();
++    let attestor = Address::generate(&s.env);
++    let subject = Address::generate(&s.env);
++    s.client.add_attestor(&attestor);
++
++    let kind = Symbol::new(&s.env, "kyc_approved");
++    let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"payload"));
++    s.client.attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
++
++    // Start from seq 100 when only 1 entry exists
++    let history = s
++        .client
++        .list_attestation_history(&subject, &kind, 100, 10, false)
++        .unwrap();
++    assert_eq!(history.len(), 0);
++}
++
++#[test]
++fn backward_compatibility_get_attestation_returns_latest() {
++    let s = setup();
++    let attestor = Address::generate(&s.env);
++    let subject = Address::generate(&s.env);
++    s.client.add_attestor(&attestor);
++
++    let kind = Symbol::new(&s.env, "kyc_approved");
++
++    // Submit multiple attestations
++    for i in 0..3 {
++        let payload = format!("payload-{}", i);
++        let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, payload.as_bytes()));
++        s.client.attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
++    }
++
++    // get_attestation should return the latest (last one submitted)
++    let latest = s.client.get_attestation(&subject, &kind);
++    let hash_final =
++        compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"payload-2"));
++    assert_eq!(latest.payload_hash, hash_final);
++}
++
++#[test]
++fn backward_compatibility_is_valid_checks_latest() {
++    let s = setup();
++    let attestor = Address::generate(&s.env);
++    let subject = Address::generate(&s.env);
++    s.client.add_attestor(&attestor);
++
++    let kind = Symbol::new(&s.env, "kyc_approved");
++    let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"payload"));
++
++    // Submit first attestation (Active)
++    s.client.attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
++    assert!(s.client.is_valid(&subject, &kind));
++
++    // Revoke it (marks current storage as Revoked)
++    s.client.revoke(&attestor, &subject, &kind);
++
++    // is_valid should return false (checks the latest storage entry)
++    assert!(!s.client.is_valid(&subject, &kind));
++
++    // But history still contains the original Active entry
++    let history = s
++        .client
++        .list_attestation_history(&subject, &kind, 1, 10, false)
++        .unwrap();
++    assert_eq!(history.len(), 2);
++    assert_eq!(history.get(0).unwrap().status, AttestationStatus::Active);
++}
++
++#[test]
++fn history_sequence_increments_across_multiple_subjects() {
++    let s = setup();
++    let attestor = Address::generate(&s.env);
++    let subject1 = Address::generate(&s.env);
++    let subject2 = Address::generate(&s.env);
++    s.client.add_attestor(&attestor);
++
++    let kind = Symbol::new(&s.env, "kyc_approved");
++    let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"payload"));
++
++    // Submit attestations for different subjects
++    s.client.attest(&attestor, &subject1, &kind, &hash, &ONE_DAY);
++    s.client.attest(&attestor, &subject2, &kind, &hash, &ONE_DAY);
++    s.client.attest(&attestor, &subject1, &kind, &hash, &ONE_DAY);
++
++    // Each (subject, type) pair has its own sequence
++    let hist1 = s
++        .client
++        .list_attestation_history(&subject1, &kind, 1, 10, false)
++        .unwrap();
++    assert_eq!(hist1.len(), 2);
++    assert_eq!(hist1.get(0).unwrap().sequence, 1);
++    assert_eq!(hist1.get(1).unwrap().sequence, 2);
++
++    let hist2 = s
++        .client
++        .list_attestation_history(&subject2, &kind, 1, 10, false)
++        .unwrap();
++    assert_eq!(hist2.len(), 1);
++    assert_eq!(hist2.get(0).unwrap().sequence, 1);
++}
++
++#[test]
++fn batch_attest_creates_history_entries_for_each() {
++    let s = setup();
++    let attestor = Address::generate(&s.env);
++    let subject1 = Address::generate(&s.env);
++    let subject2 = Address::generate(&s.env);
++    s.client.add_attestor(&attestor);
++
++    let kind = Symbol::new(&s.env, "kyc_approved");
++    let hash1 = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"first"));
++    let hash2 = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"second"));
++
++    let entries = soroban_sdk::Vec::from_array(
++        &s.env,
++        [
++            crate::types::BatchAttestEntry {
++                subject: subject1.clone(),
++                attestation_type: kind.clone(),
++                payload_hash: hash1.clone(),
++                ttl_seconds: ONE_DAY,
++            },
++            crate::types::BatchAttestEntry {
++                subject: subject2.clone(),
++                attestation_type: kind.clone(),
++                payload_hash: hash2.clone(),
++                ttl_seconds: ONE_DAY,
++            },
++        ],
++    );
++
++    s.client.attest_batch(&attestor, &entries);
++
++    // Each subject has a history entry
++    let hist1 = s
++        .client
++        .list_attestation_history(&subject1, &kind, 1, 10, false)
++        .unwrap();
++    assert_eq!(hist1.len(), 1);
++    assert_eq!(hist1.get(0).unwrap().payload_hash, hash1);
++
++    let hist2 = s
++        .client
++        .list_attestation_history(&subject2, &kind, 1, 10, false)
++        .unwrap();
++    assert_eq!(hist2.len(), 1);
++    assert_eq!(hist2.get(0).unwrap().payload_hash, hash2);
++}
+diff --git a/src/contract.rs b/src/contract.rs
+index d686c8d..499660c 100644
+--- a/src/contract.rs
++++ b/src/contract.rs
+@@ -187,7 +187,7 @@ impl AnchorKitContract {
+     }
+ 
+     /// Shared by `attest` and `attest_batch`: validates the TTL, writes the
+-    /// attestation, bumps the running count, and emits `Attested`.
++    /// attestation, bumps the running count, appends to history, and emits `Attested`.
+     fn record_attestation(
+         env: &Env,
+         attestor: &Address,
+@@ -214,6 +214,7 @@ impl AnchorKitContract {
+         };
+ 
+         storage::set_attestation(env, subject, attestation_type, &attestation);
++        storage::push_attestation_history(env, subject, attestation_type, &attestation);
+         storage::bump_attestation_count(env);
+         events::attested(
+             env,
+@@ -309,4 +310,32 @@ impl AnchorKitContract {
+     pub fn get_attestation_count(env: Env) -> u64 {
+         storage::get_attestation_count(&env)
+     }
++
++    /// Retrieve the append-only history of attestations for a given
++    /// (subject, attestation_type) pair, with pagination support.
++    ///
++    /// `start_seq`: The sequence number to start from (1-indexed, inclusive).
++    ///             Pass 1 to start from the oldest entry.
++    /// `limit`:    Maximum number of entries to return in this call (must be > 0).
++    /// `reverse`:  If true, returns entries newest-first (descending by sequence).
++    ///             If false, returns entries oldest-first (ascending by sequence).
++    ///
++    /// Returns up to `limit` entries (may be fewer if near the end of history).
++    /// Callers should paginate by tracking the returned entries' sequence numbers.
++    ///
++    /// Storage cost note: The full history of all attestations for a given
++    /// (subject, attestation_type) pair is stored on-chain indefinitely. Each
++    /// history entry is a separate persistent storage entry billed separately
++    /// for rent. See `docs/attestation-history-rent-cost.md` for the full
++    /// cost-benefit tradeoff analysis and guidance on storage rent budgeting.
++    pub fn list_attestation_history(
++        env: Env,
++        subject: Address,
++        attestation_type: Symbol,
++        start_seq: u64,
++        limit: u32,
++        reverse: bool,
++    ) -> Result<Vec<crate::types::HistoryEntry>, Error> {
++        storage::list_attestation_history(&env, &subject, &attestation_type, start_seq, limit, reverse)
++    }
+ }
+diff --git a/src/errors.rs b/src/errors.rs
+index 9a3328f..1943ba4 100644
+--- a/src/errors.rs
++++ b/src/errors.rs
+@@ -17,4 +17,5 @@ pub enum Error {
+     InvalidExpiration = 10,
+     InvalidDomain = 11,
+     EmptyBatch = 12,
++    InvalidPagination = 13,
+ }
+diff --git a/src/lib.rs b/src/lib.rs
+index 0e2a93d..0ed2a28 100644
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -11,7 +11,7 @@ mod types;
+ pub use contract::{AnchorKitContract, AnchorKitContractClient};
+ pub use errors::Error;
+ pub use hash::{compute_payload_hash, verify_payload_hash};
+-pub use types::{Attestation, AttestationStatus};
++pub use types::{Attestation, AttestationStatus, HistoryEntry};
+ 
+ #[cfg(test)]
+ mod test_util;
+@@ -25,6 +25,9 @@ mod attestor_tests;
+ #[cfg(test)]
+ mod attest_tests;
+ 
++#[cfg(test)]
++mod attestation_history_tests;
++
+ #[cfg(test)]
+ mod attest_batch_tests;
+ 
+diff --git a/src/storage.rs b/src/storage.rs
+index d18d54d..2ade8da 100644
+--- a/src/storage.rs
++++ b/src/storage.rs
+@@ -1,7 +1,7 @@
+-use soroban_sdk::{Address, Env, Symbol};
++use soroban_sdk::{Address, Env, Symbol, Vec};
+ 
+ use crate::errors::Error;
+-use crate::types::{Attestation, DataKey};
++use crate::types::{Attestation, DataKey, HistoryEntry};
+ 
+ // --- Persistent storage rent model ---------------------------------------
+ //
+@@ -159,6 +159,123 @@ pub fn get_attestation_count(env: &Env) -> u64 {
+         .unwrap_or(0)
+ }
+ 
++/// Get the next sequence number for a (subject, attestation_type) pair's history.
++/// This is incremented each time an attestation is recorded for that pair.
++fn get_attestation_seq(env: &Env, subject: &Address, attestation_type: &Symbol) -> u64 {
++    let key = DataKey::AttestationSeq(subject.clone(), attestation_type.clone());
++    env.storage()
++        .persistent()
++        .get(&key)
++        .unwrap_or(0)
++}
++
++/// Increment and return the next sequence number for a (subject, attestation_type) pair.
++fn next_attestation_seq(env: &Env, subject: &Address, attestation_type: &Symbol) -> u64 {
++    let key = DataKey::AttestationSeq(subject.clone(), attestation_type.clone());
++    let current: u64 = env
++        .storage()
++        .persistent()
++        .get(&key)
++        .unwrap_or(0);
++    let next = current + 1;
++    env.storage().persistent().set(&key, &next);
++    next
++}
++
++/// Append an attestation to the history for a (subject, attestation_type) pair.
++/// This creates an immutable history entry that's never overwritten.
++/// The history grows indefinitely, which carries a real storage rent cost.
++/// See `docs/attestation-history-rent-cost.md` for the tradeoff analysis.
++pub fn push_attestation_history(
++    env: &Env,
++    subject: &Address,
++    attestation_type: &Symbol,
++    attestation: &Attestation,
++) {
++    let seq = next_attestation_seq(env, subject, attestation_type);
++    let entry = HistoryEntry {
++        sequence: seq,
++        attestor: attestation.attestor.clone(),
++        payload_hash: attestation.payload_hash.clone(),
++        issued_at: attestation.issued_at,
++        expires_at: attestation.expires_at,
++        status: attestation.status.clone(),
++    };
++    let key = DataKey::AttestationHistory(subject.clone(), attestation_type.clone(), seq);
++    env.storage().persistent().set(&key, &entry);
++
++    // Extend the history entry's TTL to match the attestation's lifetime.
++    // History entries are immutable snapshots, so they live as long as the
++    // attestation they record. This is a conservative choice; operators could
++    // argue for shorter lifetimes for older entries to save rent.
++    let remaining_seconds = attestation
++        .expires_at
++        .saturating_sub(env.ledger().timestamp());
++    let (threshold, extend_to) = attestation_ttl_window(remaining_seconds);
++    env.storage().persistent().extend_ttl(&key, threshold, extend_to);
++}
++
++/// Retrieve attestation history for a given (subject, attestation_type) pair
++/// with pagination support.
++///
++/// `start_seq`: The sequence number to start from (1-indexed, inclusive).
++///             Pass 1 to start from the oldest entry.
++/// `limit`:    Maximum number of entries to return (must be > 0).
++/// `reverse`:  If true, returns entries in reverse order (newest first).
++///             If false, returns entries in order (oldest first).
++///
++/// Returns up to `limit` entries (may be fewer if near the end of history).
++/// Callers should paginate by tracking the returned entries' sequence numbers.
++pub fn list_attestation_history(
++    env: &Env,
++    subject: &Address,
++    attestation_type: &Symbol,
++    start_seq: u64,
++    limit: u32,
++    reverse: bool,
++) -> Result<Vec<HistoryEntry>, Error> {
++    if limit == 0 {
++        return Err(Error::InvalidPagination);
++    }
++
++    let total_seq = get_attestation_seq(env, subject, attestation_type);
++    if total_seq == 0 || start_seq > total_seq {
++        return Ok(Vec::new(&env));
++    }
++
++    let mut results = Vec::new(env);
++
++    if reverse {
++        // Newest first: start from start_seq and go backwards
++        let mut current = start_seq;
++        for _ in 0..limit {
++            if current == 0 {
++                break;
++            }
++            let key = DataKey::AttestationHistory(subject.clone(), attestation_type.clone(), current);
++            if let Some(entry) = env.storage().persistent().get::<_, HistoryEntry>(&key) {
++                results.push_back(entry);
++            }
++            current = current.saturating_sub(1);
++        }
++    } else {
++        // Oldest first: start from start_seq and go forwards
++        let mut current = start_seq;
++        for _ in 0..limit {
++            if current > total_seq {
++                break;
++            }
++            let key = DataKey::AttestationHistory(subject.clone(), attestation_type.clone(), current);
++            if let Some(entry) = env.storage().persistent().get::<_, HistoryEntry>(&key) {
++                results.push_back(entry);
++            }
++            current += 1;
++        }
++    }
++
++    Ok(results)
++}
++
+ #[cfg(test)]
+ mod ttl_window_tests {
+     use super::*;
+diff --git a/src/types.rs b/src/types.rs
+index f44da44..fb2987c 100644
+--- a/src/types.rs
++++ b/src/types.rs
+@@ -15,6 +15,13 @@ pub enum DataKey {
+     Attestation(Address, Symbol),
+     /// Running count of attestations ever submitted, for basic observability.
+     AttestationCount,
++    /// The next sequence number to assign for a (subject, attestation_type) pair's
++    /// history. Incremented each time an attestation is recorded for that pair.
++    AttestationSeq(Address, Symbol),
++    /// One entry in the append-only history of attestations for a given
++    /// (subject, attestation_type) pair. Indexed by sequence number (starting at 1).
++    /// The history is queryable via `list_attestation_history` for pagination.
++    AttestationHistory(Address, Symbol, u64), // (subject, type, sequence)
+ }
+ 
+ /// Lifecycle state of an attestation.
+@@ -52,3 +59,18 @@ pub struct Attestation {
+     pub expires_at: u64,
+     pub status: AttestationStatus,
+ }
++
++/// One entry from the append-only history of attestations for a given
++/// (subject, attestation_type) pair. The sequence number indicates its
++/// position in the history (1-indexed). History entries are immutable once
++/// written and queryable via `list_attestation_history` with pagination.
++#[contracttype]
++#[derive(Clone, Debug, Eq, PartialEq)]
++pub struct HistoryEntry {
++    pub sequence: u64,
++    pub attestor: Address,
++    pub payload_hash: BytesN<32>,
++    pub issued_at: u64,
++    pub expires_at: u64,
++    pub status: AttestationStatus,
++}
+-- 
+2.55.0.windows.3
+
