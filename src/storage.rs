@@ -52,6 +52,11 @@ const ATTESTOR_TTL_EXTEND_TO: u32 = MAX_ENTRY_TTL_LEDGERS;
 const MIN_ATTESTATION_TTL_EXTEND_TO: u32 = LEDGERS_PER_DAY * 30;
 const MAX_ATTESTATION_TTL_EXTEND_TO: u32 = MAX_ENTRY_TTL_LEDGERS;
 
+// Default maximum TTL for attestations: 1 year (365 days in seconds).
+// This applies when no per-type override is configured, providing out-of-box
+// protection against arbitrarily long-lived attestations.
+pub const DEFAULT_MAX_ATTESTATION_TTL_SECONDS: u64 = 365 * 24 * 60 * 60;
+
 /// Converts an attestation's remaining lifetime into a bounded persistent
 /// storage `extend_to` (in ledgers), clamped to
 /// `[MIN_ATTESTATION_TTL_EXTEND_TO, MAX_ATTESTATION_TTL_EXTEND_TO]`.
@@ -157,6 +162,39 @@ pub fn get_attestation_count(env: &Env) -> u64 {
         .instance()
         .get(&DataKey::AttestationCount)
         .unwrap_or(0)
+}
+
+/// Gets the maximum allowed TTL for a specific attestation type.
+/// Returns the per-type override if set, otherwise returns the default maximum TTL.
+pub fn get_max_attestation_ttl(env: &Env, attestation_type: &Symbol) -> u64 {
+    let type_specific_key = DataKey::MaxAttestationTtl(attestation_type.clone());
+    env.storage()
+        .instance()
+        .get(&type_specific_key)
+        .unwrap_or_else(|| {
+            // Fall back to default if no per-type override is set
+            env.storage()
+                .instance()
+                .get(&DataKey::DefaultMaxAttestationTtl)
+                .unwrap_or(DEFAULT_MAX_ATTESTATION_TTL_SECONDS)
+        })
+}
+
+/// Sets the default maximum TTL for all attestation types.
+/// This is the fallback value used when no per-type override is configured.
+pub fn set_default_max_attestation_ttl(env: &Env, max_ttl_seconds: u64) {
+    env.storage()
+        .instance()
+        .set(&DataKey::DefaultMaxAttestationTtl, &max_ttl_seconds);
+}
+
+/// Sets a type-specific maximum TTL for attestations of a particular type.
+/// Takes precedence over the default maximum TTL for that type.
+pub fn set_max_attestation_ttl(env: &Env, attestation_type: &Symbol, max_ttl_seconds: u64) {
+    let key = DataKey::MaxAttestationTtl(attestation_type.clone());
+    env.storage()
+        .instance()
+        .set(&key, &max_ttl_seconds);
 }
 
 #[cfg(test)]
