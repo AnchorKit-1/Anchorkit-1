@@ -74,6 +74,20 @@ pub struct PauseToggled {
     pub paused: bool,
 }
 
+#[contractevent(topics = ["default_max_ttl"])]
+#[derive(Clone, Debug)]
+pub struct DefaultMaxAttestationTtlChanged {
+    pub max_ttl_seconds: u64,
+}
+
+#[contractevent(topics = ["max_ttl"])]
+#[derive(Clone, Debug)]
+pub struct MaxAttestationTtlChanged {
+    #[topic]
+    pub attestation_type: Symbol,
+    pub max_ttl_seconds: u64,
+}
+
 pub fn initialized(env: &Env, admin: &Address) {
     Initialized {
         admin: admin.clone(),
@@ -151,6 +165,18 @@ pub fn attestation_renewed(
         subject: subject.clone(),
         attestation_type: attestation_type.clone(),
         renewed_by: renewed_by.clone(),
+    }
+    .publish(env);
+}
+
+pub fn default_max_attestation_ttl_changed(env: &Env, max_ttl_seconds: u64) {
+    DefaultMaxAttestationTtlChanged { max_ttl_seconds }.publish(env);
+}
+
+pub fn max_attestation_ttl_changed(env: &Env, attestation_type: &Symbol, max_ttl_seconds: u64) {
+    MaxAttestationTtlChanged {
+        attestation_type: attestation_type.clone(),
+        max_ttl_seconds,
     }
     .publish(env);
 }

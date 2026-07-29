@@ -15,6 +15,10 @@ pub enum DataKey {
     Attestation(Address, Symbol),
     /// Running count of attestations ever submitted, for basic observability.
     AttestationCount,
+    /// Maximum allowed TTL in seconds for a specific attestation type.
+    MaxAttestationTtl(Symbol),
+    /// Default maximum TTL in seconds for attestations when no per-type override is set.
+    DefaultMaxAttestationTtl,
 }
 
 /// Lifecycle state of an attestation.
