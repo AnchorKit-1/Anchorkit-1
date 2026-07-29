@@ -22,6 +22,10 @@ pub enum DataKey {
     /// (subject, attestation_type) pair. Indexed by sequence number (starting at 1).
     /// The history is queryable via `list_attestation_history` for pagination.
     AttestationHistory(Address, Symbol, u64), // (subject, type, sequence)
+    /// Maximum allowed TTL in seconds for a specific attestation type.
+    MaxAttestationTtl(Symbol),
+    /// Default maximum TTL in seconds for attestations when no per-type override is set.
+    DefaultMaxAttestationTtl,
 }
 
 /// Lifecycle state of an attestation.

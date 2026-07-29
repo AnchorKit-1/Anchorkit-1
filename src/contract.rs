@@ -112,6 +112,45 @@ impl AnchorKitContract {
         Ok(())
     }
 
+    /// Sets the default maximum TTL (in seconds) for all attestation types.
+    /// This value is used as a fallback when no per-type override is configured,
+    /// providing out-of-box protection against arbitrarily long-lived attestations.
+    /// Admin-only. Must be greater than zero.
+    pub fn set_default_max_attestation_ttl(env: Env, max_ttl_seconds: u64) -> Result<(), Error> {
+        let admin = storage::get_admin(&env)?;
+        admin.require_auth();
+        if max_ttl_seconds == 0 {
+            return Err(Error::InvalidExpiration);
+        }
+        storage::set_default_max_attestation_ttl(&env, max_ttl_seconds);
+        events::default_max_attestation_ttl_changed(&env, max_ttl_seconds);
+        Ok(())
+    }
+
+    /// Sets a type-specific maximum TTL (in seconds) for a particular attestation type.
+    /// When set, this overrides the default maximum TTL for that type.
+    /// Admin-only. Must be greater than zero.
+    pub fn set_max_attestation_ttl(
+        env: Env,
+        attestation_type: Symbol,
+        max_ttl_seconds: u64,
+    ) -> Result<(), Error> {
+        let admin = storage::get_admin(&env)?;
+        admin.require_auth();
+        if max_ttl_seconds == 0 {
+            return Err(Error::InvalidExpiration);
+        }
+        storage::set_max_attestation_ttl(&env, &attestation_type, max_ttl_seconds);
+        events::max_attestation_ttl_changed(&env, &attestation_type, max_ttl_seconds);
+        Ok(())
+    }
+
+    /// Gets the effective maximum TTL (in seconds) for a particular attestation type.
+    /// Returns the per-type override if set, otherwise returns the default maximum TTL.
+    pub fn get_max_attestation_ttl(env: Env, attestation_type: Symbol) -> u64 {
+        storage::get_max_attestation_ttl(&env, &attestation_type)
+    }
+
     /// Anchors an off-chain attestation about `subject` on-chain. `attestor`
     /// must be on the allow-list and must authorize the call. Overwrites any
     /// prior attestation of the same `attestation_type` for this subject.
@@ -188,6 +227,9 @@ impl AnchorKitContract {
 
     /// Shared by `attest` and `attest_batch`: validates the TTL, writes the
     /// attestation, bumps the running count, appends to history, and emits `Attested`.
+    /// Shared by `attest` and `attest_batch`: validates the TTL against the
+    /// configured maximum, writes the attestation, bumps the running count,
+    /// and emits `Attested`.
     fn record_attestation(
         env: &Env,
         attestor: &Address,
@@ -198,6 +240,12 @@ impl AnchorKitContract {
     ) -> Result<(), Error> {
         if ttl_seconds == 0 {
             return Err(Error::InvalidExpiration);
+        }
+
+        // Check if TTL exceeds the configured maximum for this attestation type
+        let max_ttl = storage::get_max_attestation_ttl(env, attestation_type);
+        if ttl_seconds > max_ttl {
+            return Err(Error::ExceedsMaxTtl);
         }
 
         let issued_at = env.ledger().timestamp();

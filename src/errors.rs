@@ -18,4 +18,5 @@ pub enum Error {
     InvalidDomain = 11,
     EmptyBatch = 12,
     InvalidPagination = 13,
+    ExceedsMaxTtl = 13,
 }

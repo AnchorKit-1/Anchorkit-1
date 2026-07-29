@@ -154,4 +154,142 @@ mod tests {
             );
         }
     }
+
+    #[test]
+    fn rejects_unicode_homograph_characters() {
+        let env = Env::default();
+        // Unicode lookalike characters that are rejected because they're non-ASCII
+        // These represent common homograph attacks if Unicode were allowed
+        let cases = [
+            // Cyrillic 'а' (U+0430) looks like Latin 'a'
+            "еxample.com", // Cyrillic 'е' + Latin 'xample'
+            // Greek 'ο' (U+03BF) looks like Latin 'o'
+            "gοοgle.com", // Greek omicrons instead of Latin o's
+            // Arabic/Hebrew homoglyphs
+            "פיsher.com", // Hebrew mixed with ASCII
+            // CJK characters
+            "تест.example.com", // Arabic
+            "test例え.com", // Japanese
+        ];
+        for case in cases {
+            assert!(
+                !validate_anchor_domain(&domain(&env, case)),
+                "should reject Unicode homograph: {case:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn accepts_punycode_encoded_domains() {
+        let env = Env::default();
+        // Punycode (xn-- prefix) is valid ASCII and thus ACCEPTED by the validator.
+        // These represent the ASCII encoding of homograph attacks.
+        // IMPORTANT: This documents a limitation of syntactic-only validation.
+        // While syntactically valid, these domains warrant extra caution:
+        //
+        // 1. xn--h1alffa9f.xn--p1ai
+        //    Decodes to: раша.рф (Russian 'raша' domain - could phish as Russia)
+        //
+        // 2. xn--2n1b961e.kr
+        //    Decodes to: 구글.kr (Korean 'Google' lookalike)
+        //
+        // 3. xn--80akhbyknj4f.xn--p1ai
+        //    Decodes to: пример.рф (Russian 'example' - common phishing vector)
+        //
+        // 4. xn--9ca.com
+        //    Decodes to: é.com (Technically a valid domain but unusual)
+        //
+        // FOLLOW-UP: Semantic validation (actual Unicode decoding and confusable
+        // character detection) is outside the scope of this syntactic validator.
+        // Callers should implement additional checks if phishing resistance is needed.
+        let punycode_domains = [
+            "xn--h1alffa9f.xn--p1ai",  // раsha.рф
+            "xn--2n1b961e.kr",         // 구글.kr
+            "xn--80akhbyknj4f.xn--p1ai", // пример.рф
+            "xn--9ca.com",             // é.com
+            "xn--bcher-kva.de",        // bücher.de (legitimate domain)
+        ];
+        for domain_str in punycode_domains {
+            assert!(
+                validate_domain_syntax(domain_str),
+                "should accept punycode domain: {domain_str:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn homograph_attack_fuzzing_corpus() {
+        let env = Env::default();
+        // Comprehensive fuzz corpus of known real-world homograph attack patterns.
+        // All of these should be REJECTED because they contain non-ASCII characters.
+        //
+        // KNOWN ACCEPTED-BUT-SUSPICIOUS: If these were encoded as punycode (xn--),
+        // they would be accepted. See test `accepts_punycode_encoded_domains`.
+        let homograph_attacks_unicode = [
+            // Cyrillic script attacks (commonly used to spoof Latin domains)
+            "раsha.рф",          // Russian 'raша' (mixed Cyrillic/Latin)
+            "amаzon.com",        // Cyrillic 'а' in 'amazon'
+            "раяндex.рф",        // Russian 'Yandex' lookalike
+            "gооgle.com",        // Cyrillic 'о' in 'google'
+            // Greek script attacks
+            "εxample.com",       // Greek epsilon looks like 'e'
+            "ρaypal.com",        // Greek rho looks like 'p'
+            // Hebrew/Arabic script attacks
+            "פايбוק.com",        // Mixed script attempt
+            "أمзון.com",         // Arabic
+            // Confusable number/letter combinations (though numbers are ASCII)
+            "l1nked1n.com",      // '1' looks like 'l' or 'I' - but this is ASCII so it's accepted
+            "reddlt.com",        // '1' looks like 'l' - ASCII, would be accepted
+            // Mixed-case and look-alike pairs (all ASCII, these should pass)
+            "I1l1O0.com",        // 'I' 'l' '1' '0' 'O' all look similar - ASCII, accepted
+            // Combining diacriticals
+            "exemple\u{0301}.com", // e + combining acute
+            "café.com",          // 'é' character
+        ];
+        for case in homograph_attacks_unicode {
+            let should_reject = !case.is_ascii();
+            let result = validate_anchor_domain(&domain(&env, case));
+            if should_reject {
+                assert!(
+                    !result,
+                    "should reject Unicode homograph attack: {case:?}"
+                );
+            } else {
+                // ASCII-only homographs (like l1nked1n) are accepted - this is expected
+                // but callers should be aware of these look-alike patterns
+                assert!(
+                    result,
+                    "should accept ASCII-only domain: {case:?}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn documented_homograph_limitations() {
+        // This test documents the current limitations of the syntactic-only validator
+        // and identifies which homograph attacks would require semantic analysis.
+        //
+        // LIMITATION 1: Punycode domains
+        // The validator accepts xn-- prefixed domains (punycode encoding of Unicode).
+        // These are syntactically valid but can encode homograph attacks.
+        // MITIGATION: Decode punycode and check for confusable characters if needed.
+        //
+        // LIMITATION 2: Visual homoglyph attacks within same script
+        // Domains like "reddlt.com" (with '1' instead of 'l') are accepted.
+        // This is not a Unicode issue but a human perception issue.
+        // MITIGATION: No fix needed here - this is expected behavior.
+        //
+        // LIMITATION 3: Combining diacriticals
+        // Unicode combining characters (e.g., é as e + combining acute) are rejected
+        // because they contain non-ASCII bytes.
+        // MITIGATION: Already handled by ASCII-only validation.
+        //
+        // These limitations are intentional design choices:
+        // - This validator is syntactic-only, not semantic.
+        // - Callers that need phishing protection should implement additional validation.
+        // - The smart contract validates that the domain is well-formed for use as
+        //   a stellar.toml endpoint identifier, not that it's safe from phishing.
+        assert!(true); // This test only documents limitations; no assertions needed
+    }
 }

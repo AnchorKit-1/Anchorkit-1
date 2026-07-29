@@ -152,6 +152,7 @@ MSVC toolchain or run the test suite on Linux/macOS/WSL instead. See
 - [Release process](docs/release.md) — version-tag format, release-notes convention, artifact layout, and the dry-run procedure for the automated WASM release workflow.
 - [Revocation notification design](docs/revocation-notification-design.md) — proposed payload and delivery semantics for notifying subscribers when an attestation should be revoked.
 - [Contract wasm size](docs/wasm-size.md) — before/after size profiling and what `strip = true` and dropping an unused dependency bought us.
+- [Domain validation security](docs/domain-validation-security.md) — homograph attack fuzzing, punycode validation, and recommended follow-ups for phishing protection in anchor discovery and SEP-10 flows.
 
 ## Roadmap
 

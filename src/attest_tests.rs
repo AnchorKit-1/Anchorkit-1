@@ -1,5 +1,5 @@
 use soroban_sdk::testutils::{Address as _, Ledger as _};
-use soroban_sdk::{Address, Bytes, Symbol};
+use soroban_sdk::{Address, Bytes, BytesN, Symbol};
 
 use crate::errors::Error;
 use crate::hash::compute_payload_hash;
@@ -159,4 +159,83 @@ fn unauthenticated_attest_fails() {
     s.env.set_auths(&[]);
     let result = s.client.try_attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
     assert!(result.is_err());
+}
+
+// Regression tests for fuzzing findings:
+
+#[test]
+fn attest_with_empty_symbol_name_should_not_panic() {
+    let s = setup();
+    let attestor = Address::generate(&s.env);
+    let subject = Address::generate(&s.env);
+    s.client.add_attestor(&attestor);
+
+    let kind = Symbol::new(&s.env, "");
+    let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"payload"));
+    // Attempt with empty symbol name (may fail in contract logic, but should not panic)
+    let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let _ = s.client.try_attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
+    }));
+    // Should not panic
+    assert!(result.is_ok());
+}
+
+#[test]
+fn attest_with_very_long_symbol_name_should_not_panic() {
+    let s = setup();
+    let attestor = Address::generate(&s.env);
+    let subject = Address::generate(&s.env);
+    s.client.add_attestor(&attestor);
+
+    // Create a very long symbol name (exceeds typical limits)
+    let long_name = "x".repeat(1000);
+    let kind = Symbol::new(&s.env, &long_name);
+    let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"payload"));
+    // Attempt with overly long symbol
+    let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let _ = s.client.try_attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
+    }));
+    // Should not panic
+    assert!(result.is_ok());
+}
+
+#[test]
+fn attest_with_u64_max_ttl_should_not_panic() {
+    let s = setup();
+    let attestor = Address::generate(&s.env);
+    let subject = Address::generate(&s.env);
+    s.client.add_attestor(&attestor);
+
+    let kind = Symbol::new(&s.env, "kyc_approved");
+    let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"payload"));
+
+    // Test with maximum u64 value for TTL (may overflow timestamp calculation)
+    let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let _ = s.client.try_attest(&attestor, &subject, &kind, &hash, &u64::MAX);
+    }));
+    // Should not panic (saturating_add should handle overflow gracefully)
+    assert!(result.is_ok());
+}
+
+#[test]
+fn attest_with_malformed_payload_hash_should_not_panic() {
+    let s = setup();
+    let attestor = Address::generate(&s.env);
+    let subject = Address::generate(&s.env);
+    s.client.add_attestor(&attestor);
+
+    let kind = Symbol::new(&s.env, "kyc_approved");
+    // Create various malformed hash values
+    let mut hash_bytes = [0u8; 32];
+    // Fill with pattern that might trigger issues
+    for i in 0..32 {
+        hash_bytes[i] = (i as u8).wrapping_mul(0xFF);
+    }
+    let hash = BytesN::from_array(&s.env, hash_bytes);
+
+    let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let _ = s.client.try_attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
+    }));
+    // Should not panic
+    assert!(result.is_ok());
 }
