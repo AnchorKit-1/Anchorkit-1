@@ -225,6 +225,8 @@ impl AnchorKitContract {
         Ok(())
     }
 
+    /// Shared by `attest` and `attest_batch`: validates the TTL, writes the
+    /// attestation, bumps the running count, appends to history, and emits `Attested`.
     /// Shared by `attest` and `attest_batch`: validates the TTL against the
     /// configured maximum, writes the attestation, bumps the running count,
     /// and emits `Attested`.
@@ -260,6 +262,7 @@ impl AnchorKitContract {
         };
 
         storage::set_attestation(env, subject, attestation_type, &attestation);
+        storage::push_attestation_history(env, subject, attestation_type, &attestation);
         storage::bump_attestation_count(env);
         events::attested(
             env,
@@ -354,5 +357,33 @@ impl AnchorKitContract {
 
     pub fn get_attestation_count(env: Env) -> u64 {
         storage::get_attestation_count(&env)
+    }
+
+    /// Retrieve the append-only history of attestations for a given
+    /// (subject, attestation_type) pair, with pagination support.
+    ///
+    /// `start_seq`: The sequence number to start from (1-indexed, inclusive).
+    ///             Pass 1 to start from the oldest entry.
+    /// `limit`:    Maximum number of entries to return in this call (must be > 0).
+    /// `reverse`:  If true, returns entries newest-first (descending by sequence).
+    ///             If false, returns entries oldest-first (ascending by sequence).
+    ///
+    /// Returns up to `limit` entries (may be fewer if near the end of history).
+    /// Callers should paginate by tracking the returned entries' sequence numbers.
+    ///
+    /// Storage cost note: The full history of all attestations for a given
+    /// (subject, attestation_type) pair is stored on-chain indefinitely. Each
+    /// history entry is a separate persistent storage entry billed separately
+    /// for rent. See `docs/attestation-history-rent-cost.md` for the full
+    /// cost-benefit tradeoff analysis and guidance on storage rent budgeting.
+    pub fn list_attestation_history(
+        env: Env,
+        subject: Address,
+        attestation_type: Symbol,
+        start_seq: u64,
+        limit: u32,
+        reverse: bool,
+    ) -> Result<Vec<crate::types::HistoryEntry>, Error> {
+        storage::list_attestation_history(&env, &subject, &attestation_type, start_seq, limit, reverse)
     }
 }

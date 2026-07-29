@@ -17,5 +17,6 @@ pub enum Error {
     InvalidExpiration = 10,
     InvalidDomain = 11,
     EmptyBatch = 12,
+    InvalidPagination = 13,
     ExceedsMaxTtl = 13,
 }
