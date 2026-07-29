@@ -139,6 +139,29 @@ npm run storybook
 - ✅ **Error Codes** - Structured error handling
 - ✅ **No Auto Storage** - Parent app controls storage
 
+### Domain Validation & Homograph Attack Resistance
+
+When validating anchor domains, the framework performs **syntactic validation** only. This ensures well-formed domain structure but does **not** protect against homograph (lookalike) attacks used in phishing campaigns.
+
+#### Important Security Notes:
+
+1. **Unicode Homographs** - Domains with Unicode characters (Cyrillic, Greek, Arabic, etc.) are rejected ✅
+   - Example: `амаzon.com` (Cyrillic 'а') is rejected
+
+2. **Punycode Domains** - Internationalized domains using punycode (xn-- prefix) ARE accepted
+   - Example: `xn--h1alffa9f.xn--p1ai` (Russian `раша.рф`) is syntactically valid
+   - This is **expected and correct** for the validator
+   - Additional checks may be needed for phishing protection
+
+3. **Recommended Additional Checks**:
+   - Decode and inspect punycode domains for script mixing
+   - Check domain reputation services (VirusTotal, URLhaus)
+   - Validate HTTPS certificate ownership
+   - Verify against known-good anchor domain lists
+   - Flag newly registered domains (WHOIS check)
+
+**See `docs/domain-validation-security.md` for detailed security analysis and testing results.**
+
 ---
 
 ## 📦 Component API
