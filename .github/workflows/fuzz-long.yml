@@ -1,0 +1,50 @@
+name: Fuzzing (long-run)
+
+on:
+  workflow_dispatch:  # Allow manual trigger from GitHub UI
+  schedule:
+    # Run extended fuzzing weekly on Monday at 2 AM UTC
+    - cron: '0 2 * * 1'
+
+jobs:
+  fuzz-long:
+    name: Extended fuzzing run
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt
+
+      - name: Cache cargo registry and build artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: fuzzing
+
+      - name: Install cargo-fuzz
+        run: cargo install cargo-fuzz
+
+      # Run extended fuzzing for attest (600 seconds = 10 minutes)
+      - name: Run fuzz_attest_args (10 minutes)
+        working-directory: ./fuzz
+        run: cargo fuzz run fuzz_attest_args -- -max_total_time=600
+
+      # Run extended fuzzing for revoke (600 seconds = 10 minutes)
+      - name: Run fuzz_revoke_args (10 minutes)
+        working-directory: ./fuzz
+        run: cargo fuzz run fuzz_revoke_args -- -max_total_time=600
+
+      # If any crashes are found, they will be in fuzz/artifacts/
+      # Create an issue to track any crashes found
+      - name: Check for crashes
+        if: failure()
+        run: |
+          if [ -d "fuzz/artifacts" ] && [ "$(find fuzz/artifacts -type f | wc -l)" -gt 0 ]; then
+            echo "Fuzzing crashes detected!"
+            ls -la fuzz/artifacts/
+            exit 1
+          fi

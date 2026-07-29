@@ -1,0 +1,29 @@
+[package]
+name = "anchorkit-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[dependencies]
+libfuzzer-sys = "0.4"
+anchorkit = { path = ".." }
+soroban-sdk = { version = "26.1.0", features = ["testutils"] }
+
+[[bin]]
+name = "fuzz_attest_args"
+path = "fuzz_targets/fuzz_attest_args.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_revoke_args"
+path = "fuzz_targets/fuzz_revoke_args.rs"
+test = false
+doc = false
+
+# Fuzzing configuration: use inline breakpoints and enable all sanitizers
+[profile.release]
+opt-level = 3
+debug-assertions = true
+overflow-checks = true
+lto = true
