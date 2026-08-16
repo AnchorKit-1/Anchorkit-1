@@ -20,7 +20,7 @@ fn benchmark_sha256_hashing() {
 
     for &size in sizes.iter() {
         let env = Env::default();
-        let mut budget = env.budget();
+        let mut budget = env.cost_estimate().budget();
 
         // Construct input payload data
         let data_vec = std::vec![0u8; size];
@@ -70,5 +70,5 @@ fn benchmark_sha256_hashing() {
             throughput
         );
     }
-    std::println!("");
+    std::println!();
 }
