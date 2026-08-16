@@ -28,6 +28,11 @@ soroban-sdk = "26.1.0"
 
 [dev-dependencies]
 soroban-sdk = { version = "26.1.0", features = ["testutils"] }
+criterion = "0.5"
+
+[[bench]]
+name = "hot_paths"
+harness = false
 
 [profile.release]
 opt-level = "z"
@@ -38,3 +43,13 @@ panic = "abort"
 codegen-units = 1
 lto = true
 strip = true
+
+# Benches run natively (`cargo bench`), never on the wasm32v1-none target, so
+# this is tuned for fastest host execution rather than the on-chain build's
+# wasm-size budget -- the opposite trade-off from [profile.release] above.
+[profile.bench]
+opt-level = 3
+lto = true
+codegen-units = 1
+debug = false
+overflow-checks = false

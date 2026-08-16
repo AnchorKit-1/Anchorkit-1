@@ -33,6 +33,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32v1-none
+          components: clippy
 
       # Caches the registry index, downloaded crates, and build artifacts
       # keyed on Cargo.lock, so a matrix re-run (or a later CI run with an
@@ -74,6 +75,12 @@ jobs:
       # setups.
       - name: Run Cargo Tests
         run: cargo test
+
+      # Same lint set as the local pre-commit hook (see .pre-commit-config.yaml)
+      # so a PR can't merge with a clippy warning that just wasn't caught
+      # locally. -D warnings promotes every warning to a hard failure.
+      - name: Run Clippy
+        run: cargo clippy --all-targets -- -D warnings
 
       - name: Build deployable contract (wasm32v1-none)
         run: cargo build --target wasm32v1-none --release
