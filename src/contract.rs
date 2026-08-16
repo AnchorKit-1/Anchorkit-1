@@ -112,6 +112,45 @@ impl AnchorKitContract {
         Ok(())
     }
 
+    /// Sets the default maximum TTL (in seconds) for all attestation types.
+    /// This value is used as a fallback when no per-type override is configured,
+    /// providing out-of-box protection against arbitrarily long-lived attestations.
+    /// Admin-only. Must be greater than zero.
+    pub fn set_default_max_attestation_ttl(env: Env, max_ttl_seconds: u64) -> Result<(), Error> {
+        let admin = storage::get_admin(&env)?;
+        admin.require_auth();
+        if max_ttl_seconds == 0 {
+            return Err(Error::InvalidExpiration);
+        }
+        storage::set_default_max_attestation_ttl(&env, max_ttl_seconds);
+        events::default_max_attestation_ttl_changed(&env, max_ttl_seconds);
+        Ok(())
+    }
+
+    /// Sets a type-specific maximum TTL (in seconds) for a particular attestation type.
+    /// When set, this overrides the default maximum TTL for that type.
+    /// Admin-only. Must be greater than zero.
+    pub fn set_max_attestation_ttl(
+        env: Env,
+        attestation_type: Symbol,
+        max_ttl_seconds: u64,
+    ) -> Result<(), Error> {
+        let admin = storage::get_admin(&env)?;
+        admin.require_auth();
+        if max_ttl_seconds == 0 {
+            return Err(Error::InvalidExpiration);
+        }
+        storage::set_max_attestation_ttl(&env, &attestation_type, max_ttl_seconds);
+        events::max_attestation_ttl_changed(&env, &attestation_type, max_ttl_seconds);
+        Ok(())
+    }
+
+    /// Gets the effective maximum TTL (in seconds) for a particular attestation type.
+    /// Returns the per-type override if set, otherwise returns the default maximum TTL.
+    pub fn get_max_attestation_ttl(env: Env, attestation_type: Symbol) -> u64 {
+        storage::get_max_attestation_ttl(&env, &attestation_type)
+    }
+
     /// Anchors an off-chain attestation about `subject` on-chain. `attestor`
     /// must be on the allow-list and must authorize the call. Overwrites any
     /// prior attestation of the same `attestation_type` for this subject.
@@ -187,7 +226,10 @@ impl AnchorKitContract {
     }
 
     /// Shared by `attest` and `attest_batch`: validates the TTL, writes the
-    /// attestation, bumps the running count, and emits `Attested`.
+    /// attestation, bumps the running count, appends to history, and emits `Attested`.
+    /// Shared by `attest` and `attest_batch`: validates the TTL against the
+    /// configured maximum, writes the attestation, bumps the running count,
+    /// and emits `Attested`.
     fn record_attestation(
         env: &Env,
         attestor: &Address,
@@ -198,6 +240,12 @@ impl AnchorKitContract {
     ) -> Result<(), Error> {
         if ttl_seconds == 0 {
             return Err(Error::InvalidExpiration);
+        }
+
+        // Check if TTL exceeds the configured maximum for this attestation type
+        let max_ttl = storage::get_max_attestation_ttl(env, attestation_type);
+        if ttl_seconds > max_ttl {
+            return Err(Error::ExceedsMaxTtl);
         }
 
         let issued_at = env.ledger().timestamp();
@@ -214,6 +262,7 @@ impl AnchorKitContract {
         };
 
         storage::set_attestation(env, subject, attestation_type, &attestation);
+        storage::push_attestation_history(env, subject, attestation_type, &attestation);
         storage::bump_attestation_count(env);
         events::attested(
             env,
@@ -308,5 +357,33 @@ impl AnchorKitContract {
 
     pub fn get_attestation_count(env: Env) -> u64 {
         storage::get_attestation_count(&env)
+    }
+
+    /// Retrieve the append-only history of attestations for a given
+    /// (subject, attestation_type) pair, with pagination support.
+    ///
+    /// `start_seq`: The sequence number to start from (1-indexed, inclusive).
+    ///             Pass 1 to start from the oldest entry.
+    /// `limit`:    Maximum number of entries to return in this call (must be > 0).
+    /// `reverse`:  If true, returns entries newest-first (descending by sequence).
+    ///             If false, returns entries oldest-first (ascending by sequence).
+    ///
+    /// Returns up to `limit` entries (may be fewer if near the end of history).
+    /// Callers should paginate by tracking the returned entries' sequence numbers.
+    ///
+    /// Storage cost note: The full history of all attestations for a given
+    /// (subject, attestation_type) pair is stored on-chain indefinitely. Each
+    /// history entry is a separate persistent storage entry billed separately
+    /// for rent. See `docs/attestation-history-rent-cost.md` for the full
+    /// cost-benefit tradeoff analysis and guidance on storage rent budgeting.
+    pub fn list_attestation_history(
+        env: Env,
+        subject: Address,
+        attestation_type: Symbol,
+        start_seq: u64,
+        limit: u32,
+        reverse: bool,
+    ) -> Result<Vec<crate::types::HistoryEntry>, Error> {
+        storage::list_attestation_history(&env, &subject, &attestation_type, start_seq, limit, reverse)
     }
 }

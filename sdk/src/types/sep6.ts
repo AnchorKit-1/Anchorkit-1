@@ -187,3 +187,49 @@ export interface AnchorStreamCapability {
   /** True if the anchor supports `cursor` query param on `/transactions` for long-poll */
   supportsCursor: boolean;
 }
+
+// ---------------------------------------------------------------------------
+// Additional types for TransactionStream (lower-level streaming client)
+// ---------------------------------------------------------------------------
+
+/** Returns true when `status` is one of the terminal statuses. */
+export function isTerminalStatus(status: Sep6TransactionStatus): boolean {
+  return TERMINAL_STATUSES.has(status);
+}
+
+/** Shape of `GET /transaction?id=<id>` response. */
+export interface Sep6TransactionResponse {
+  transaction: Sep6Transaction;
+}
+
+/** Shape of `GET /transactions?id=<id>&long_poll_timeout=<n>` response. */
+export interface Sep6TransactionsResponse {
+  transactions: Sep6Transaction[];
+}
+
+/** An update event emitted by `TransactionStream`. */
+export interface Sep6StatusUpdate {
+  /** The full transaction at the moment of the update. */
+  transaction: Sep6Transaction;
+  /** The transport mode that delivered this update. */
+  mode: StreamMode;
+  /** `true` when this is a terminal status and the stream will close. */
+  terminal: boolean;
+}
+
+/** Streaming mode in priority order. */
+export type StreamMode = 'sse' | 'long-poll' | 'polling';
+
+/** Reason the TransactionStream was closed. */
+export type StreamCloseReason =
+  | 'terminal_status'
+  | 'max_reconnect_attempts'
+  | 'closed_by_caller'
+  | 'error';
+
+/** Event emitted when a TransactionStream closes. */
+export interface StreamCloseEvent {
+  reason: StreamCloseReason;
+  lastTransaction?: Sep6Transaction;
+  error?: Error;
+}

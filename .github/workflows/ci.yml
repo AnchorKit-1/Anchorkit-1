@@ -3,8 +3,13 @@ name: CI
 on:
   push:
     branches: [ main ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ main ]
+    paths:
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - '.github/workflows/ci.yml'
 
 jobs:
   preflight-and-test:
@@ -40,13 +45,22 @@ jobs:
         with:
           shared-key: ${{ matrix.os }}
 
-      # The preflight script is a bash script; on Windows the GitHub-hosted
-      # runner provides Git Bash so this works across all three platforms.
-      - name: Run CI Preflight Check
+      # Linux/macOS run the bash script directly. Windows runs the
+      # PowerShell equivalent (scripts/ci_preflight_check.ps1) as
+      # first-class tooling rather than relying on the runner's bundled Git
+      # Bash -- see CONTRIBUTING.md for why both variants exist and are
+      # kept in sync.
+      - name: Run CI Preflight Check (bash)
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           chmod +x ./scripts/ci_preflight_check.sh
           ./scripts/ci_preflight_check.sh
+
+      - name: Run CI Preflight Check (PowerShell)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/ci_preflight_check.ps1
 
       # NOTE (Windows): earlier CI ran a bash-installed x86_64-pc-windows-gnu
       # toolchain, which hit "export ordinal too large" -- the soroban-sdk
@@ -70,3 +84,133 @@ jobs:
 
       - name: Build deployable contract (wasm32v1-none)
         run: cargo build --target wasm32v1-none --release
+
+  # Run a short fuzzing budget on every PR and push to catch regressions early.
+  # Longer fuzzing runs are available via a manual workflow (fuzz-long.yml).
+  fuzz-short:
+    name: Fuzzing (short budget)
+    runs-on: ubuntu-latest
+    # Only run on linux to save CI minutes; fuzzing is platform-independent
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt
+
+      - name: Cache cargo registry and build artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: fuzzing
+
+      - name: Install cargo-fuzz
+        run: cargo install cargo-fuzz
+
+      - name: Run fuzz_attest_args (60 seconds)
+        working-directory: ./fuzz
+        run: cargo fuzz run fuzz_attest_args -- -max_total_time=60
+
+      - name: Run fuzz_revoke_args (60 seconds)
+        working-directory: ./fuzz
+        run: cargo fuzz run fuzz_revoke_args -- -max_total_time=60
+
+  # ---------------------------------------------------------------------------
+  # dependency-audit: check for known security vulnerabilities and license
+  # issues in dependencies using cargo-deny and cargo-audit.
+  #
+  # Runs on every PR that touches Cargo.toml or Cargo.lock files.
+  # Fails on critical/high security advisories.
+  # ---------------------------------------------------------------------------
+  dependency-audit:
+    name: Dependency Security & License Audit
+    runs-on: ubuntu-latest
+    # Only run on PRs and when Cargo files have potentially changed
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-deny
+        run: cargo install cargo-deny --locked
+
+      - name: Run cargo deny checks
+        run: cargo deny check advisories licenses bans sources
+
+      - name: Run cargo audit
+        run: cargo audit --deny warnings
+
+  # ---------------------------------------------------------------------------
+  # wasm-artifact: build the optimized release wasm, report its size in the
+  # job summary, and upload it as a downloadable build artifact.
+  #
+  # Runs on every push to main and on every version tag (v*) so that both
+  # trunk builds and release builds produce a downloadable artifact.
+  # Only runs on ubuntu-latest — wasm32v1-none is a cross-compile target and
+  # the output is platform-independent, so a single runner is sufficient.
+  # ---------------------------------------------------------------------------
+  wasm-artifact:
+    name: Build & upload release wasm artifact
+    runs-on: ubuntu-latest
+    # Only on pushes (not PRs) — avoids uploading artifacts for every draft PR
+    # while still catching every merge to main and every release tag.
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain with WASM target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32v1-none
+
+      # Keyed separately from the test-matrix cache (shared-key: ubuntu-latest)
+      # so a wasm release build never evicts or collides with a test-debug build.
+      - name: Cache cargo registry and build artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: wasm-release
+
+      # Build with the [profile.release] settings already in Cargo.toml:
+      #   opt-level = "z"  (size-optimised)
+      #   lto = true       (link-time optimisation across all crates)
+      #   strip = true     (strips debug symbols from the output binary)
+      #   codegen-units = 1 (maximises LTO effectiveness)
+      # This is the same command documented in README.md and used locally.
+      - name: Build release wasm (wasm32v1-none)
+        run: cargo build --target wasm32v1-none --release
+
+      # Report the artifact size in the job summary so reviewers can see size
+      # regressions at a glance without downloading the artifact.
+      - name: Report wasm size in job summary
+        shell: bash
+        run: |
+          WASM_PATH="target/wasm32v1-none/release/anchorkit.wasm"
+          SIZE_BYTES=$(wc -c < "$WASM_PATH")
+          SIZE_KB=$(echo "scale=2; $SIZE_BYTES / 1024" | bc)
+          echo "### Wasm artifact size" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| File | Size |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| \`$WASM_PATH\` | ${SIZE_KB} KB (${SIZE_BYTES} bytes) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Built with \`--release\` profile: \`opt-level=z\`, \`lto=true\`, \`strip=true\`." >> "$GITHUB_STEP_SUMMARY"
+
+      # Upload the wasm file so it can be downloaded from the Actions run page.
+      # Retention is kept at the GitHub default (90 days).  The artifact name
+      # includes the short SHA so builds from different commits are
+      # distinguishable in the Actions UI.
+      - name: Upload wasm artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: anchorkit-${{ github.ref_name }}-${{ github.sha }}
+          path: target/wasm32v1-none/release/anchorkit.wasm
+          if-no-files-found: error

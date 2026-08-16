@@ -1,7 +1,7 @@
-use soroban_sdk::{Address, Env, Symbol};
+use soroban_sdk::{Address, Env, Symbol, Vec};
 
 use crate::errors::Error;
-use crate::types::{Attestation, DataKey};
+use crate::types::{Attestation, DataKey, HistoryEntry};
 
 // --- Persistent storage rent model ---------------------------------------
 //
@@ -51,6 +51,11 @@ const ATTESTOR_TTL_EXTEND_TO: u32 = MAX_ENTRY_TTL_LEDGERS;
 // `MAX_ENTRY_TTL_LEDGERS` and needs `renew_attestation` to stay alive.
 const MIN_ATTESTATION_TTL_EXTEND_TO: u32 = LEDGERS_PER_DAY * 30;
 const MAX_ATTESTATION_TTL_EXTEND_TO: u32 = MAX_ENTRY_TTL_LEDGERS;
+
+// Default maximum TTL for attestations: 1 year (365 days in seconds).
+// This applies when no per-type override is configured, providing out-of-box
+// protection against arbitrarily long-lived attestations.
+pub const DEFAULT_MAX_ATTESTATION_TTL_SECONDS: u64 = 365 * 24 * 60 * 60;
 
 /// Converts an attestation's remaining lifetime into a bounded persistent
 /// storage `extend_to` (in ledgers), clamped to
@@ -157,6 +162,154 @@ pub fn get_attestation_count(env: &Env) -> u64 {
         .instance()
         .get(&DataKey::AttestationCount)
         .unwrap_or(0)
+}
+
+/// Get the next sequence number for a (subject, attestation_type) pair's history.
+/// This is incremented each time an attestation is recorded for that pair.
+fn get_attestation_seq(env: &Env, subject: &Address, attestation_type: &Symbol) -> u64 {
+    let key = DataKey::AttestationSeq(subject.clone(), attestation_type.clone());
+    env.storage()
+        .persistent()
+        .get(&key)
+        .unwrap_or(0)
+}
+
+/// Increment and return the next sequence number for a (subject, attestation_type) pair.
+fn next_attestation_seq(env: &Env, subject: &Address, attestation_type: &Symbol) -> u64 {
+    let key = DataKey::AttestationSeq(subject.clone(), attestation_type.clone());
+    let current: u64 = env
+        .storage()
+        .persistent()
+        .get(&key)
+        .unwrap_or(0);
+    let next = current + 1;
+    env.storage().persistent().set(&key, &next);
+    next
+}
+
+/// Append an attestation to the history for a (subject, attestation_type) pair.
+/// This creates an immutable history entry that's never overwritten.
+/// The history grows indefinitely, which carries a real storage rent cost.
+/// See `docs/attestation-history-rent-cost.md` for the tradeoff analysis.
+pub fn push_attestation_history(
+    env: &Env,
+    subject: &Address,
+    attestation_type: &Symbol,
+    attestation: &Attestation,
+) {
+    let seq = next_attestation_seq(env, subject, attestation_type);
+    let entry = HistoryEntry {
+        sequence: seq,
+        attestor: attestation.attestor.clone(),
+        payload_hash: attestation.payload_hash.clone(),
+        issued_at: attestation.issued_at,
+        expires_at: attestation.expires_at,
+        status: attestation.status.clone(),
+    };
+    let key = DataKey::AttestationHistory(subject.clone(), attestation_type.clone(), seq);
+    env.storage().persistent().set(&key, &entry);
+
+    // Extend the history entry's TTL to match the attestation's lifetime.
+    // History entries are immutable snapshots, so they live as long as the
+    // attestation they record. This is a conservative choice; operators could
+    // argue for shorter lifetimes for older entries to save rent.
+    let remaining_seconds = attestation
+        .expires_at
+        .saturating_sub(env.ledger().timestamp());
+    let (threshold, extend_to) = attestation_ttl_window(remaining_seconds);
+    env.storage().persistent().extend_ttl(&key, threshold, extend_to);
+}
+
+/// Retrieve attestation history for a given (subject, attestation_type) pair
+/// with pagination support.
+///
+/// `start_seq`: The sequence number to start from (1-indexed, inclusive).
+///             Pass 1 to start from the oldest entry.
+/// `limit`:    Maximum number of entries to return (must be > 0).
+/// `reverse`:  If true, returns entries in reverse order (newest first).
+///             If false, returns entries in order (oldest first).
+///
+/// Returns up to `limit` entries (may be fewer if near the end of history).
+/// Callers should paginate by tracking the returned entries' sequence numbers.
+pub fn list_attestation_history(
+    env: &Env,
+    subject: &Address,
+    attestation_type: &Symbol,
+    start_seq: u64,
+    limit: u32,
+    reverse: bool,
+) -> Result<Vec<HistoryEntry>, Error> {
+    if limit == 0 {
+        return Err(Error::InvalidPagination);
+    }
+
+    let total_seq = get_attestation_seq(env, subject, attestation_type);
+    if total_seq == 0 || start_seq > total_seq {
+        return Ok(Vec::new(&env));
+    }
+
+    let mut results = Vec::new(env);
+
+    if reverse {
+        // Newest first: start from start_seq and go backwards
+        let mut current = start_seq;
+        for _ in 0..limit {
+            if current == 0 {
+                break;
+            }
+            let key = DataKey::AttestationHistory(subject.clone(), attestation_type.clone(), current);
+            if let Some(entry) = env.storage().persistent().get::<_, HistoryEntry>(&key) {
+                results.push_back(entry);
+            }
+            current = current.saturating_sub(1);
+        }
+    } else {
+        // Oldest first: start from start_seq and go forwards
+        let mut current = start_seq;
+        for _ in 0..limit {
+            if current > total_seq {
+                break;
+            }
+            let key = DataKey::AttestationHistory(subject.clone(), attestation_type.clone(), current);
+            if let Some(entry) = env.storage().persistent().get::<_, HistoryEntry>(&key) {
+                results.push_back(entry);
+            }
+            current += 1;
+        }
+    }
+
+    Ok(results)
+/// Gets the maximum allowed TTL for a specific attestation type.
+/// Returns the per-type override if set, otherwise returns the default maximum TTL.
+pub fn get_max_attestation_ttl(env: &Env, attestation_type: &Symbol) -> u64 {
+    let type_specific_key = DataKey::MaxAttestationTtl(attestation_type.clone());
+    env.storage()
+        .instance()
+        .get(&type_specific_key)
+        .unwrap_or_else(|| {
+            // Fall back to default if no per-type override is set
+            env.storage()
+                .instance()
+                .get(&DataKey::DefaultMaxAttestationTtl)
+                .unwrap_or(DEFAULT_MAX_ATTESTATION_TTL_SECONDS)
+        })
+}
+
+/// Sets the default maximum TTL for all attestation types.
+/// This is the fallback value used when no per-type override is configured.
+pub fn set_default_max_attestation_ttl(env: &Env, max_ttl_seconds: u64) {
+    env.storage()
+        .instance()
+        .set(&DataKey::DefaultMaxAttestationTtl, &max_ttl_seconds);
+}
+
+/// Sets a type-specific maximum TTL for attestations of a particular type.
+/// Takes precedence over the default maximum TTL for that type.
+pub fn set_max_attestation_ttl(env: &Env, attestation_type: &Symbol, max_ttl_seconds: u64) {
+    let key = DataKey::MaxAttestationTtl(attestation_type.clone());
+    env.storage()
+        .instance()
+        .set(&key, &max_ttl_seconds);
 }
 
 #[cfg(test)]

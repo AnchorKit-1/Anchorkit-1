@@ -15,6 +15,17 @@ pub enum DataKey {
     Attestation(Address, Symbol),
     /// Running count of attestations ever submitted, for basic observability.
     AttestationCount,
+    /// The next sequence number to assign for a (subject, attestation_type) pair's
+    /// history. Incremented each time an attestation is recorded for that pair.
+    AttestationSeq(Address, Symbol),
+    /// One entry in the append-only history of attestations for a given
+    /// (subject, attestation_type) pair. Indexed by sequence number (starting at 1).
+    /// The history is queryable via `list_attestation_history` for pagination.
+    AttestationHistory(Address, Symbol, u64), // (subject, type, sequence)
+    /// Maximum allowed TTL in seconds for a specific attestation type.
+    MaxAttestationTtl(Symbol),
+    /// Default maximum TTL in seconds for attestations when no per-type override is set.
+    DefaultMaxAttestationTtl,
 }
 
 /// Lifecycle state of an attestation.
@@ -47,6 +58,21 @@ pub struct Attestation {
     pub attestor: Address,
     pub subject: Address,
     pub attestation_type: Symbol,
+    pub payload_hash: BytesN<32>,
+    pub issued_at: u64,
+    pub expires_at: u64,
+    pub status: AttestationStatus,
+}
+
+/// One entry from the append-only history of attestations for a given
+/// (subject, attestation_type) pair. The sequence number indicates its
+/// position in the history (1-indexed). History entries are immutable once
+/// written and queryable via `list_attestation_history` with pagination.
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct HistoryEntry {
+    pub sequence: u64,
+    pub attestor: Address,
     pub payload_hash: BytesN<32>,
     pub issued_at: u64,
     pub expires_at: u64,
