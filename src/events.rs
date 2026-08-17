@@ -1,3 +1,10 @@
+//! Every event this contract emits. Downstream indexers depend on the exact
+//! topic and data shape published here, so a change to a struct's fields,
+//! `#[topic]` markers, or `topics = [...]` override changes the on-chain
+//! event contract. `events_tests.rs` pins the exact wire shape of every
+//! event defined below and is the source of truth for what's safe to
+//! change without breaking an indexer -- update it deliberately alongside
+//! any change here, never by auto-accepting a diff.
 use soroban_sdk::{contractevent, Address, BytesN, Env, Symbol};
 
 #[contractevent]

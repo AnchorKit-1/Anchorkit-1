@@ -32,6 +32,9 @@ mod attestation_history_tests;
 mod attest_batch_tests;
 
 #[cfg(test)]
+mod events_tests;
+
+#[cfg(test)]
 mod batch_gas_benchmark;
 
 #[cfg(test)]
