@@ -55,6 +55,9 @@ mod pause_tests;
 #[cfg(test)]
 mod max_ttl_tests;
 
+#[cfg(test)]
+mod wasm_artifact_path;
+
 #[cfg(all(test, feature = "stress-tests"))]
 mod attestor_stress_tests;
 
