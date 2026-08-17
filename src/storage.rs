@@ -245,7 +245,7 @@ pub fn list_attestation_history(
 
     let total_seq = get_attestation_seq(env, subject, attestation_type);
     if total_seq == 0 || start_seq > total_seq {
-        return Ok(Vec::new(&env));
+        return Ok(Vec::new(env));
     }
 
     let mut results = Vec::new(env);
@@ -265,8 +265,7 @@ pub fn list_attestation_history(
         }
     } else {
         // Oldest first: start from start_seq and go forwards
-        let mut current = start_seq;
-        for _ in 0..limit {
+        for current in (start_seq..).take(limit as usize) {
             if current > total_seq {
                 break;
             }
@@ -274,11 +273,12 @@ pub fn list_attestation_history(
             if let Some(entry) = env.storage().persistent().get::<_, HistoryEntry>(&key) {
                 results.push_back(entry);
             }
-            current += 1;
         }
     }
 
     Ok(results)
+}
+
 /// Gets the maximum allowed TTL for a specific attestation type.
 /// Returns the per-type override if set, otherwise returns the default maximum TTL.
 pub fn get_max_attestation_ttl(env: &Env, attestation_type: &Symbol) -> u64 {

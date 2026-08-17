@@ -1,3 +1,5 @@
+extern crate std;
+
 use soroban_sdk::testutils::Address as _;
 use soroban_sdk::{Address, Bytes, Symbol};
 
@@ -32,8 +34,7 @@ fn history_preserved_when_attestation_overwritten() {
     // But history contains both entries
     let history = s
         .client
-        .list_attestation_history(&subject, &kind, 1, 10, false)
-        .unwrap();
+        .list_attestation_history(&subject, &kind, &1, &10, &false);
     assert_eq!(history.len(), 2);
     assert_eq!(history.get(0).unwrap().payload_hash, first_hash);
     assert_eq!(history.get(0).unwrap().sequence, 1);
@@ -56,8 +57,7 @@ fn revoke_creates_new_history_entry() {
     // Before revoke, entry is Active
     let history1 = s
         .client
-        .list_attestation_history(&subject, &kind, 1, 10, false)
-        .unwrap();
+        .list_attestation_history(&subject, &kind, &1, &10, &false);
     assert_eq!(history1.len(), 1);
     assert_eq!(history1.get(0).unwrap().status, AttestationStatus::Active);
 
@@ -70,8 +70,7 @@ fn revoke_creates_new_history_entry() {
     // But history now has two entries: original (Active) and revoked (Revoked)
     let history2 = s
         .client
-        .list_attestation_history(&subject, &kind, 1, 10, false)
-        .unwrap();
+        .list_attestation_history(&subject, &kind, &1, &10, &false);
     assert_eq!(history2.len(), 2);
     assert_eq!(history2.get(0).unwrap().status, AttestationStatus::Active);
     assert_eq!(history2.get(0).unwrap().sequence, 1);
@@ -90,7 +89,7 @@ fn pagination_oldest_first() {
 
     // Submit 5 attestations
     for i in 0..5 {
-        let payload = format!("payload-{}", i);
+        let payload = std::format!("payload-{}", i);
         let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, payload.as_bytes()));
         s.client.attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
     }
@@ -98,8 +97,7 @@ fn pagination_oldest_first() {
     // Get first 2 entries (oldest first)
     let page1 = s
         .client
-        .list_attestation_history(&subject, &kind, 1, 2, false)
-        .unwrap();
+        .list_attestation_history(&subject, &kind, &1, &2, &false);
     assert_eq!(page1.len(), 2);
     assert_eq!(page1.get(0).unwrap().sequence, 1);
     assert_eq!(page1.get(1).unwrap().sequence, 2);
@@ -107,8 +105,7 @@ fn pagination_oldest_first() {
     // Get next 2 entries starting from seq 3
     let page2 = s
         .client
-        .list_attestation_history(&subject, &kind, 3, 2, false)
-        .unwrap();
+        .list_attestation_history(&subject, &kind, &3, &2, &false);
     assert_eq!(page2.len(), 2);
     assert_eq!(page2.get(0).unwrap().sequence, 3);
     assert_eq!(page2.get(1).unwrap().sequence, 4);
@@ -116,8 +113,7 @@ fn pagination_oldest_first() {
     // Get remaining entries
     let page3 = s
         .client
-        .list_attestation_history(&subject, &kind, 5, 2, false)
-        .unwrap();
+        .list_attestation_history(&subject, &kind, &5, &2, &false);
     assert_eq!(page3.len(), 1);
     assert_eq!(page3.get(0).unwrap().sequence, 5);
 }
@@ -133,7 +129,7 @@ fn pagination_newest_first() {
 
     // Submit 5 attestations
     for i in 0..5 {
-        let payload = format!("payload-{}", i);
+        let payload = std::format!("payload-{}", i);
         let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, payload.as_bytes()));
         s.client.attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
     }
@@ -141,8 +137,7 @@ fn pagination_newest_first() {
     // Get first 2 entries from end (newest first)
     let page1 = s
         .client
-        .list_attestation_history(&subject, &kind, 5, 2, true)
-        .unwrap();
+        .list_attestation_history(&subject, &kind, &5, &2, &true);
     assert_eq!(page1.len(), 2);
     assert_eq!(page1.get(0).unwrap().sequence, 5);
     assert_eq!(page1.get(1).unwrap().sequence, 4);
@@ -150,8 +145,7 @@ fn pagination_newest_first() {
     // Get next 2 entries
     let page2 = s
         .client
-        .list_attestation_history(&subject, &kind, 3, 2, true)
-        .unwrap();
+        .list_attestation_history(&subject, &kind, &3, &2, &true);
     assert_eq!(page2.len(), 2);
     assert_eq!(page2.get(0).unwrap().sequence, 3);
     assert_eq!(page2.get(1).unwrap().sequence, 2);
@@ -159,8 +153,7 @@ fn pagination_newest_first() {
     // Get remaining
     let page3 = s
         .client
-        .list_attestation_history(&subject, &kind, 1, 2, true)
-        .unwrap();
+        .list_attestation_history(&subject, &kind, &1, &2, &true);
     assert_eq!(page3.len(), 1);
     assert_eq!(page3.get(0).unwrap().sequence, 1);
 }
@@ -173,8 +166,7 @@ fn empty_history_for_nonexistent_attestation() {
 
     let history = s
         .client
-        .list_attestation_history(&subject, &kind, 1, 10, false)
-        .unwrap();
+        .list_attestation_history(&subject, &kind, &1, &10, &false);
     assert_eq!(history.len(), 0);
 }
 
@@ -192,7 +184,7 @@ fn pagination_limit_zero_fails() {
     // Limit of 0 should fail
     assert_eq!(
         s.client
-            .try_list_attestation_history(&subject, &kind, 1, 0, false),
+            .try_list_attestation_history(&subject, &kind, &1, &0, &false),
         Err(Ok(Error::InvalidPagination))
     );
 }
@@ -211,8 +203,7 @@ fn pagination_start_seq_beyond_end_returns_empty() {
     // Start from seq 100 when only 1 entry exists
     let history = s
         .client
-        .list_attestation_history(&subject, &kind, 100, 10, false)
-        .unwrap();
+        .list_attestation_history(&subject, &kind, &100, &10, &false);
     assert_eq!(history.len(), 0);
 }
 
@@ -227,7 +218,7 @@ fn backward_compatibility_get_attestation_returns_latest() {
 
     // Submit multiple attestations
     for i in 0..3 {
-        let payload = format!("payload-{}", i);
+        let payload = std::format!("payload-{}", i);
         let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, payload.as_bytes()));
         s.client.attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
     }
@@ -262,8 +253,7 @@ fn backward_compatibility_is_valid_checks_latest() {
     // But history still contains the original Active entry
     let history = s
         .client
-        .list_attestation_history(&subject, &kind, 1, 10, false)
-        .unwrap();
+        .list_attestation_history(&subject, &kind, &1, &10, &false);
     assert_eq!(history.len(), 2);
     assert_eq!(history.get(0).unwrap().status, AttestationStatus::Active);
 }
@@ -287,16 +277,14 @@ fn history_sequence_increments_across_multiple_subjects() {
     // Each (subject, type) pair has its own sequence
     let hist1 = s
         .client
-        .list_attestation_history(&subject1, &kind, 1, 10, false)
-        .unwrap();
+        .list_attestation_history(&subject1, &kind, &1, &10, &false);
     assert_eq!(hist1.len(), 2);
     assert_eq!(hist1.get(0).unwrap().sequence, 1);
     assert_eq!(hist1.get(1).unwrap().sequence, 2);
 
     let hist2 = s
         .client
-        .list_attestation_history(&subject2, &kind, 1, 10, false)
-        .unwrap();
+        .list_attestation_history(&subject2, &kind, &1, &10, &false);
     assert_eq!(hist2.len(), 1);
     assert_eq!(hist2.get(0).unwrap().sequence, 1);
 }
@@ -336,15 +324,13 @@ fn batch_attest_creates_history_entries_for_each() {
     // Each subject has a history entry
     let hist1 = s
         .client
-        .list_attestation_history(&subject1, &kind, 1, 10, false)
-        .unwrap();
+        .list_attestation_history(&subject1, &kind, &1, &10, &false);
     assert_eq!(hist1.len(), 1);
     assert_eq!(hist1.get(0).unwrap().payload_hash, hash1);
 
     let hist2 = s
         .client
-        .list_attestation_history(&subject2, &kind, 1, 10, false)
-        .unwrap();
+        .list_attestation_history(&subject2, &kind, &1, &10, &false);
     assert_eq!(hist2.len(), 1);
     assert_eq!(hist2.get(0).unwrap().payload_hash, hash2);
 }

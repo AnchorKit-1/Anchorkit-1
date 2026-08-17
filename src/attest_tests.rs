@@ -1,3 +1,5 @@
+extern crate std;
+
 use soroban_sdk::testutils::{Address as _, Ledger as _};
 use soroban_sdk::{Address, Bytes, BytesN, Symbol};
 
@@ -231,7 +233,7 @@ fn attest_with_malformed_payload_hash_should_not_panic() {
     for i in 0..32 {
         hash_bytes[i] = (i as u8).wrapping_mul(0xFF);
     }
-    let hash = BytesN::from_array(&s.env, hash_bytes);
+    let hash = BytesN::from_array(&s.env, &hash_bytes);
 
     let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
         let _ = s.client.try_attest(&attestor, &subject, &kind, &hash, &ONE_DAY);

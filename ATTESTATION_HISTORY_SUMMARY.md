@@ -114,7 +114,7 @@ pub struct HistoryEntry {
 
 **New Error** (`src/errors.rs`):
 ```rust
-InvalidPagination = 13,  // limit must be > 0
+InvalidPagination = 14,  // limit must be > 0
 ```
 
 ## Test Coverage
