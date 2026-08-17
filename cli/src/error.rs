@@ -24,6 +24,14 @@ pub enum CliError {
     /// The anchor returned HTTP 404/405 for the long-poll endpoint, indicating
     /// it doesn't support the `long_poll_timeout` extension.
     LongPollUnsupported,
+    /// A request to `url` failed at the transport level (DNS, TLS, timeout,
+    /// connection refused, ...) -- used by `discover`'s stellar.toml/info
+    /// fetches, which never need the more specific RPC error variants above.
+    Unreachable { url: String, reason: String },
+    /// `url` responded with a non-2xx HTTP status.
+    HttpStatus { url: String, status: u16 },
+    /// `url`'s response body didn't parse as the expected TOML/JSON shape.
+    Malformed { url: String, reason: String },
 }
 
 impl fmt::Display for CliError {
@@ -41,6 +49,15 @@ impl fmt::Display for CliError {
             }
             CliError::LongPollUnsupported => {
                 write!(f, "anchor does not support long-poll")
+            }
+            CliError::Unreachable { url, reason } => {
+                write!(f, "could not reach '{url}': {reason}")
+            }
+            CliError::HttpStatus { url, status } => {
+                write!(f, "'{url}' returned HTTP {status}")
+            }
+            CliError::Malformed { url, reason } => {
+                write!(f, "'{url}' returned a malformed response: {reason}")
             }
         }
     }

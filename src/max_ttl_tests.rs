@@ -1,7 +1,7 @@
 #![cfg(test)]
 
 use soroban_sdk::{
-    testutils::{Address as _, Ledger},
+    testutils::{Address as _, BytesN as _, Ledger},
     Address, BytesN, Env, IntoVal, Symbol,
 };
 
@@ -12,9 +12,9 @@ use crate::types::AttestationStatus;
 
 fn setup_contract() -> (Env, Address, Address, Address) {
     let env = Env::default();
-    let admin = Address::random(&env);
-    let attestor = Address::random(&env);
-    let subject = Address::random(&env);
+    let admin = Address::generate(&env);
+    let attestor = Address::generate(&env);
+    let subject = Address::generate(&env);
 
     // Initialize the contract
     AnchorKitContract::initialize(env.clone(), admin.clone()).unwrap();

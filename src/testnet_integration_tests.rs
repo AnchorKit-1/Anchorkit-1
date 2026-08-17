@@ -78,15 +78,11 @@ fn source_identity() -> String {
 fn wasm_path() -> PathBuf {
     let manifest_dir = env::var("CARGO_MANIFEST_DIR")
         .expect("CARGO_MANIFEST_DIR is always set by cargo when running tests");
-    let path: PathBuf = [
-        manifest_dir.as_str(),
-        "target",
-        "wasm32v1-none",
-        "release",
-        "anchorkit.wasm",
-    ]
-    .iter()
-    .collect();
+    // The path-joining itself is covered by always-on tests in
+    // `wasm_artifact_path.rs` (not gated behind this module's
+    // `testnet-integration` feature), so it runs in CI on every OS,
+    // including Windows.
+    let path = crate::wasm_artifact_path::wasm_artifact_path(&manifest_dir);
     if !path.exists() {
         std::panic!(
             "wasm artifact not found at {}. Build it first: \

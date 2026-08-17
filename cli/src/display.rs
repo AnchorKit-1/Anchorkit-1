@@ -39,9 +39,15 @@ pub fn format_scval(val: &ScVal) -> String {
 fn format_address(addr: &ScAddress) -> String {
     match addr {
         ScAddress::Account(AccountId(PublicKey::PublicKeyTypeEd25519(Uint256(bytes)))) => {
-            stellar_strkey::ed25519::PublicKey(*bytes).to_string()
+            // `stellar_strkey`'s own inherent `to_string()` returns a
+            // stack-allocated `heapless::String`, not `std::string::String`
+            // (it's usable in no_std contexts) -- format! goes through
+            // `Display` instead, which always yields `std::string::String`.
+            format!("{}", stellar_strkey::ed25519::PublicKey(*bytes))
         }
-        ScAddress::Contract(ContractId(Hash(bytes))) => stellar_strkey::Contract(*bytes).to_string(),
+        ScAddress::Contract(ContractId(Hash(bytes))) => {
+            format!("{}", stellar_strkey::Contract(*bytes))
+        }
         other => format!("{other:?}"),
     }
 }
