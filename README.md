@@ -154,6 +154,7 @@ MSVC toolchain or run the test suite on Linux/macOS/WSL instead. See
 - [Revocation notification design](docs/revocation-notification-design.md) — proposed payload and delivery semantics for notifying subscribers when an attestation should be revoked.
 - [Contract wasm size](docs/wasm-size.md) — before/after size profiling and what `strip = true` and dropping an unused dependency bought us.
 - [Domain validation security](docs/domain-validation-security.md) — homograph attack fuzzing, punycode validation, and recommended follow-ups for phishing protection in anchor discovery and SEP-10 flows.
+- [Pre-audit security checklist](docs/pre-audit-security-checklist.md) — method-by-method reentrancy/auth-bypass/storage-exhaustion review of `src/contract.rs`, with open findings to resolve before mainnet deployment.
 
 ## Roadmap
 
