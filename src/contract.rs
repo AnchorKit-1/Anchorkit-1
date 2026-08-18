@@ -1,9 +1,36 @@
-use soroban_sdk::{contract, contractimpl, Address, BytesN, Env, Symbol, Vec};
+use soroban_sdk::{contract, contractimpl, Address, BytesN, Env, Symbol, SymbolStr, TryFromVal, Vec};
 
 use crate::errors::Error;
 use crate::events;
 use crate::storage;
 use crate::types::{Attestation, AttestationStatus, BatchAttestEntry};
+
+// `Symbol` itself is capped at 32 characters by the host (see
+// `soroban_sdk::Symbol`'s docs), but nothing below that ceiling stops a
+// malicious or buggy attestor from submitting long, meaningless
+// `attestation_type`s purely to grief persistent storage with oversized
+// keys (see `DataKey::Attestation` in types.rs). This cap is comfortably
+// above any real-world attestation type (`kyc_approved` is 12 characters,
+// `payment_confirmed` is 17) while still leaving room below the host's own
+// 32-character ceiling, so an oversized value gets a specific, testable
+// `Error::AttestationTypeTooLong` instead of relying on the host's
+// undifferentiated Symbol-length trap.
+const MAX_ATTESTATION_TYPE_LEN: usize = 24;
+
+/// Rejects `attestation_type`s longer than `MAX_ATTESTATION_TYPE_LEN`.
+/// `Symbol` has no public API for inspecting its own length directly, so
+/// this goes through `SymbolStr`, which decodes a `Symbol`'s characters
+/// (bit-packed for short symbols, host-object bytes for longer ones) into a
+/// fixed, stack-allocated buffer -- safe to use from `#![no_std]` guest
+/// Wasm code, no heap allocation involved.
+fn validate_attestation_type(env: &Env, attestation_type: &Symbol) -> Result<(), Error> {
+    let as_str = SymbolStr::try_from_val(env, &attestation_type.to_symbol_val())
+        .expect("attestation_type is already a valid Symbol");
+    if as_str.len() > MAX_ATTESTATION_TYPE_LEN {
+        return Err(Error::AttestationTypeTooLong);
+    }
+    Ok(())
+}
 
 #[contract]
 pub struct AnchorKitContract;
@@ -210,6 +237,7 @@ impl AnchorKitContract {
             if entry.ttl_seconds == 0 {
                 return Err(Error::InvalidExpiration);
             }
+            validate_attestation_type(&env, &entry.attestation_type)?;
         }
 
         for entry in entries.iter() {
@@ -241,6 +269,7 @@ impl AnchorKitContract {
         if ttl_seconds == 0 {
             return Err(Error::InvalidExpiration);
         }
+        validate_attestation_type(env, attestation_type)?;
 
         // Check if TTL exceeds the configured maximum for this attestation type
         let max_ttl = storage::get_max_attestation_ttl(env, attestation_type);

@@ -149,6 +149,41 @@ fn a_new_attest_call_overwrites_the_prior_attestation_for_the_same_type() {
 }
 
 #[test]
+fn attest_accepts_attestation_type_at_the_max_length() {
+    let s = setup();
+    let attestor = Address::generate(&s.env);
+    let subject = Address::generate(&s.env);
+    s.client.add_attestor(&attestor);
+
+    // Exactly MAX_ATTESTATION_TYPE_LEN (24) characters.
+    let kind = Symbol::new(&s.env, "xxxxxxxxxxxxxxxxxxxxxxxx");
+    let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"payload"));
+
+    s.client.attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
+
+    assert!(s.client.is_valid(&subject, &kind));
+}
+
+#[test]
+fn attest_fails_with_attestation_type_over_the_max_length() {
+    let s = setup();
+    let attestor = Address::generate(&s.env);
+    let subject = Address::generate(&s.env);
+    s.client.add_attestor(&attestor);
+
+    // 29 characters: over the 24-character cap, but still a valid Symbol
+    // (well under the host's own 32-character ceiling).
+    let kind = Symbol::new(&s.env, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"payload"));
+
+    assert_eq!(
+        s.client.try_attest(&attestor, &subject, &kind, &hash, &ONE_DAY),
+        Err(Ok(Error::AttestationTypeTooLong))
+    );
+    assert!(!s.client.is_valid(&subject, &kind));
+}
+
+#[test]
 fn unauthenticated_attest_fails() {
     let s = setup();
     let attestor = Address::generate(&s.env);

@@ -108,6 +108,43 @@ fn invalid_entry_fails_the_whole_batch() {
 }
 
 #[test]
+fn oversized_attestation_type_fails_the_whole_batch() {
+    let s = setup();
+    let attestor = Address::generate(&s.env);
+    s.client.add_attestor(&attestor);
+
+    let good_subject = Address::generate(&s.env);
+    let bad_subject = Address::generate(&s.env);
+    let entries = Vec::from_array(
+        &s.env,
+        [
+            entry(&s, &good_subject, "kyc_approved", b"a", ONE_DAY),
+            entry(
+                &s,
+                &bad_subject,
+                "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                b"b",
+                ONE_DAY,
+            ),
+        ],
+    );
+
+    assert_eq!(
+        s.client.try_attest_batch(&attestor, &entries),
+        Err(Ok(Error::AttestationTypeTooLong))
+    );
+
+    // Nothing from the batch should have been stored, including the entry
+    // that came before the invalid one.
+    let kind = Symbol::new(&s.env, "kyc_approved");
+    assert_eq!(
+        s.client.try_get_attestation(&good_subject, &kind),
+        Err(Ok(Error::AttestationNotFound))
+    );
+    assert_eq!(s.client.get_attestation_count(), 0);
+}
+
+#[test]
 fn empty_batch_is_rejected() {
     let s = setup();
     let attestor = Address::generate(&s.env);
