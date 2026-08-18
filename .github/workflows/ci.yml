@@ -111,12 +111,19 @@ jobs:
         run: cargo install cargo-fuzz
 
       - name: Run fuzz_attest_args (60 seconds)
-        working-directory: ./fuzz
-        run: cargo fuzz run fuzz_attest_args -- -max_total_time=60
+        # cargo-fuzz resolves its `fuzz/` directory relative to the crate
+        # root it's invoked from, so running it from inside `./fuzz` itself
+        # makes it look for a nonexistent `./fuzz/fuzz/Cargo.toml`. Run from
+        # the repo root instead, same as a local `cargo fuzz run` invocation.
+        #
+        # `+nightly` is required here: rust-toolchain.toml pins "stable" for
+        # this repo, which rustup's toolchain resolution honors over the
+        # nightly install above for any bare `cargo`/`rustc` invocation, and
+        # cargo-fuzz's sanitizer build needs nightly-only `-Z` flags.
+        run: cargo +nightly fuzz run fuzz_attest_args -- -max_total_time=60
 
       - name: Run fuzz_revoke_args (60 seconds)
-        working-directory: ./fuzz
-        run: cargo fuzz run fuzz_revoke_args -- -max_total_time=60
+        run: cargo +nightly fuzz run fuzz_revoke_args -- -max_total_time=60
 
   # ---------------------------------------------------------------------------
   # dependency-audit: check for known security vulnerabilities and license
