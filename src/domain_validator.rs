@@ -181,7 +181,6 @@ mod tests {
 
     #[test]
     fn accepts_punycode_encoded_domains() {
-        let env = Env::default();
         // Punycode (xn-- prefix) is valid ASCII and thus ACCEPTED by the validator.
         // These represent the ASCII encoding of homograph attacks.
         // IMPORTANT: This documents a limitation of syntactic-only validation.
@@ -290,6 +289,5 @@ mod tests {
         // - Callers that need phishing protection should implement additional validation.
         // - The smart contract validates that the domain is well-formed for use as
         //   a stellar.toml endpoint identifier, not that it's safe from phishing.
-        assert!(true); // This test only documents limitations; no assertions needed
     }
 }

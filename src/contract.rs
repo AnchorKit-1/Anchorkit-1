@@ -296,7 +296,10 @@ impl AnchorKitContract {
     }
 
     /// Revokes an existing attestation. May be called by the contract admin
-    /// or by the original attestor; whichever it is must authorize the call.
+    /// or by the original attestor; whichever it is must authorize the
+    /// call. Appends a `Revoked` entry to the attestation's history, so the
+    /// revocation itself is part of the permanent audit trail alongside
+    /// every `attest`.
     pub fn revoke(
         env: Env,
         caller: Address,
@@ -321,6 +324,7 @@ impl AnchorKitContract {
 
         attestation.status = AttestationStatus::Revoked;
         storage::set_attestation(&env, &subject, &attestation_type, &attestation);
+        storage::push_attestation_history(&env, &subject, &attestation_type, &attestation);
         events::revoked(&env, &subject, &attestation_type, &caller);
         Ok(())
     }

@@ -1,6 +1,6 @@
 {
   "generators": {
-    "address": 50,
+    "address": 18,
     "nonce": 0,
     "mux_id": 0
   },
@@ -586,1158 +586,6 @@
                           },
                           "val": {
                             "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABFO3O"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "9246be1e9ba9f5de5baf766a256eb725e9a7551fb93d7faa793c938e0f41de35"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABHGT6"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "5085cb99dbe1e374ccd321e5b58182d2c42cf4840c68cfab17b0618a8285e7d6"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABI7IO"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "8e00d1c0c8ffe94540e534e256d4589be3e3865dc0559a732697aef38a364e83"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABKXA6"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "e9f3440e5518839aa600db07b5400f8ec287ce0321fad602afd103ce447a1c98"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABMPZO"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "14236fe421fe9ddb8377a19b60ce71dd655704bcefc225c9287fb11127ba6569"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABOHR6"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "a7911cdfdc28e6a1867e359ba426081aacfa692fdeb3e978d2a68dd924fa8c3e"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABR4OP"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "21548c66b44347d877e7b405a250121cda87cd494b122f0324f7df3b6cd75f86"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABTUG7"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "bc2d9ddc9857e53598677dbea82a2583879e89ce6c032c77d825187bf3f1a943"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABVM7P"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "58ec452ede72799baf21664edc953297b592ad9e95f2381710593ad7a32f31ef"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABXEX7"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "79a881f99a636d0ad75f16f53668982b59f8bb96c3fbb449155fe7a08dba9cb1"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABY5MP"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "282a163f3e6f52ab35cf838079369bce33cf5a1f151d2822846095a6d07e1ae2"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB2VE7"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "c1c3c8fdf22e3a4adef796c8fdaf739d7d3b222f995891eb8f495ca71fb932a8"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4N5P"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "688e94a51ee508a95e761294afb7a6004b432c15d9890c80ddf23bde8caa4c26"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB6FV7"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "c006af35e3b4ca022ab986593a148b4f196f186168ee96604eeaa7e338e66ac1"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBKTY"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "c1a9fae908008d34f389b1dba2a1a8e8301f7a942412ef6e6299c9e27e89dfaa"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACDC3I"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "560231689713a5933b6c8ac3e6b2f243730e49e1c6b0c610c41e8e8dad26044c"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACF2CY"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "fe5b0deca006174e2151088e1a7d60fe91819467db5d709ae5a19c01a3cd3e3f"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACHSKI"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "2de44621c76edf2debbc2df62ccb52c5036b1919dca3af0c0a886cc48dbfaeba"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACILRY"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "83440636eff7b2ec0f78ef7b8e480a033e8aeb67e6ecb657ce9bcdfdb21aa744"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACKDZI"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "eaaf1805f2ec6a18eee5a7909f79908651341965d9f0b9de8d45d9262e5735ae"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACM3AY"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "6870f86f6560dd5b0d0a47d0ae89df6a96b6a47a6258940060d75ff759634158"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACOTII"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "e882dd6a247f4ada1f700f1918bd23b7c730ad62af15f5cec8de976cbad09691"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACRIXZ"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "51be0458d20b1ce2ff5316e7e473109c26f5d8b457037edf8c4529f6ff82bddb"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACTA7J"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "0f65dd2d76efb602f9554514892751d5cf336a56c3888aa8cb122e970016949a"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACVYGZ"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "b9098fe78517adc23218f8cd7d804f55c977fb22185a4d8e752ab7e82e5c1d89"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACXQOJ"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "95534981420d9a1e5d3cd3b567c6e21f920742087ecf44c187e077cdc8497ac2"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACYJVZ"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "c8d26116ed30f9816a05fdf061b2535145472f388d9814e96f33f08369dbcbd0"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC2B5J"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "ae3c8b8d99a39542f78af83dbbb42c81cd94199ec1b5f60a0801063e95842570"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC4ZEZ"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "d596e806d34bd7d4304b9f00ec340f02fa90c4faa17fe39729cb15c76e0de77f"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC6RMJ"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "552d7d672c5bbbccfb210a425e36a1d65bc663d3d3c395114c8ebc9c7cf28394"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBG3K"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "5a05f87d329a8321f2006f4f3b11b810aeddcd21cb383b61df03824074eaffc9"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADDOT2"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "ttl_seconds"
-                          },
-                          "val": {
-                            "u64": "86400"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "map": [
-                        {
-                          "key": {
-                            "symbol": "attestation_type"
-                          },
-                          "val": {
-                            "symbol": "kyc_approved"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "payload_hash"
-                          },
-                          "val": {
-                            "bytes": "daceee899cdb68711b2b16b1708d684b193062163a2ef8ca80e5a3f002212822"
-                          }
-                        },
-                        {
-                          "key": {
-                            "symbol": "subject"
-                          },
-                          "val": {
-                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADFWKK"
                           }
                         },
                         {
@@ -3146,27 +1994,22 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationHistory"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABHGT6"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
                   },
                   {
                     "symbol": "kyc_approved"
+                  },
+                  {
+                    "u64": "1"
                   }
                 ]
               },
               "durability": "persistent",
               "val": {
                 "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
                   {
                     "key": {
                       "symbol": "attestor"
@@ -3196,7 +2039,15 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "9246be1e9ba9f5de5baf766a256eb725e9a7551fb93d7faa793c938e0f41de35"
+                      "bytes": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sequence"
+                    },
+                    "val": {
+                      "u64": "1"
                     }
                   },
                   {
@@ -3209,14 +2060,6 @@
                           "symbol": "Active"
                         }
                       ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABHGT6"
                     }
                   }
                 ]
@@ -3237,27 +2080,22 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationHistory"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABI7IO"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK3IM"
                   },
                   {
                     "symbol": "kyc_approved"
+                  },
+                  {
+                    "u64": "1"
                   }
                 ]
               },
               "durability": "persistent",
               "val": {
                 "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
                   {
                     "key": {
                       "symbol": "attestor"
@@ -3287,7 +2125,15 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "5085cb99dbe1e374ccd321e5b58182d2c42cf4840c68cfab17b0618a8285e7d6"
+                      "bytes": "b40711a88c7039756fb8a73827eabe2c0fe5a0346ca7e0a104adc0fc764f528d"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sequence"
+                    },
+                    "val": {
+                      "u64": "1"
                     }
                   },
                   {
@@ -3300,14 +2146,6 @@
                           "symbol": "Active"
                         }
                       ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABI7IO"
                     }
                   }
                 ]
@@ -3328,27 +2166,22 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationHistory"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABKXA6"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMDR4"
                   },
                   {
                     "symbol": "kyc_approved"
+                  },
+                  {
+                    "u64": "1"
                   }
                 ]
               },
               "durability": "persistent",
               "val": {
                 "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
                   {
                     "key": {
                       "symbol": "attestor"
@@ -3378,7 +2211,15 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "8e00d1c0c8ffe94540e534e256d4589be3e3865dc0559a732697aef38a364e83"
+                      "bytes": "433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sequence"
+                    },
+                    "val": {
+                      "u64": "1"
                     }
                   },
                   {
@@ -3391,14 +2232,6 @@
                           "symbol": "Active"
                         }
                       ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABKXA6"
                     }
                   }
                 ]
@@ -3419,27 +2252,22 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationHistory"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABMPZO"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOLZM"
                   },
                   {
                     "symbol": "kyc_approved"
+                  },
+                  {
+                    "u64": "1"
                   }
                 ]
               },
               "durability": "persistent",
               "val": {
                 "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
                   {
                     "key": {
                       "symbol": "attestor"
@@ -3469,7 +2297,15 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "e9f3440e5518839aa600db07b5400f8ec287ce0321fad602afd103ce447a1c98"
+                      "bytes": "88185d128d9922e0e6bcd32b07b6c7f20f27968eab447a1d8d1cdf250f79f7d3"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sequence"
+                    },
+                    "val": {
+                      "u64": "1"
                     }
                   },
                   {
@@ -3482,14 +2318,6 @@
                           "symbol": "Active"
                         }
                       ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABMPZO"
                     }
                   }
                 ]
@@ -3510,27 +2338,22 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationHistory"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABOHR6"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARQG5"
                   },
                   {
                     "symbol": "kyc_approved"
+                  },
+                  {
+                    "u64": "1"
                   }
                 ]
               },
               "durability": "persistent",
               "val": {
                 "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
                   {
                     "key": {
                       "symbol": "attestor"
@@ -3560,7 +2383,15 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "14236fe421fe9ddb8377a19b60ce71dd655704bcefc225c9287fb11127ba6569"
+                      "bytes": "1bc5d0e3df0ea12c4d0078668d14924f95106bbe173e196de50fe13a900b0937"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sequence"
+                    },
+                    "val": {
+                      "u64": "1"
                     }
                   },
                   {
@@ -3573,14 +2404,6 @@
                           "symbol": "Active"
                         }
                       ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABOHR6"
                     }
                   }
                 ]
@@ -3601,27 +2424,22 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationHistory"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABR4OP"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATYON"
                   },
                   {
                     "symbol": "kyc_approved"
+                  },
+                  {
+                    "u64": "1"
                   }
                 ]
               },
               "durability": "persistent",
               "val": {
                 "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
                   {
                     "key": {
                       "symbol": "attestor"
@@ -3651,7 +2469,15 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "a7911cdfdc28e6a1867e359ba426081aacfa692fdeb3e978d2a68dd924fa8c3e"
+                      "bytes": "221f8af2372a95064f2ef7d7712216a9ab46e7ef98482fd237e106f83eaa7569"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sequence"
+                    },
+                    "val": {
+                      "u64": "1"
                     }
                   },
                   {
@@ -3664,14 +2490,6 @@
                           "symbol": "Active"
                         }
                       ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABR4OP"
                     }
                   }
                 ]
@@ -3692,27 +2510,22 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationHistory"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABTUG7"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVAX5"
                   },
                   {
                     "symbol": "kyc_approved"
+                  },
+                  {
+                    "u64": "1"
                   }
                 ]
               },
               "durability": "persistent",
               "val": {
                 "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
                   {
                     "key": {
                       "symbol": "attestor"
@@ -3742,7 +2555,15 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "21548c66b44347d877e7b405a250121cda87cd494b122f0324f7df3b6cd75f86"
+                      "bytes": "b253668f6b59f1ff28522831931e4d3c5a3de533965af22e961735437c0172cb"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sequence"
+                    },
+                    "val": {
+                      "u64": "1"
                     }
                   },
                   {
@@ -3755,14 +2576,6 @@
                           "symbol": "Active"
                         }
                       ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABTUG7"
                     }
                   }
                 ]
@@ -3783,27 +2596,22 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationHistory"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABVM7P"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXI7N"
                   },
                   {
                     "symbol": "kyc_approved"
+                  },
+                  {
+                    "u64": "1"
                   }
                 ]
               },
               "durability": "persistent",
               "val": {
                 "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
                   {
                     "key": {
                       "symbol": "attestor"
@@ -3833,7 +2641,15 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "bc2d9ddc9857e53598677dbea82a2583879e89ce6c032c77d825187bf3f1a943"
+                      "bytes": "1561ade0621c5acf44b780521f95a1e0b19b4e5032945b860c4032fc28a3a23b"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sequence"
+                    },
+                    "val": {
+                      "u64": "1"
                     }
                   },
                   {
@@ -3846,14 +2662,6 @@
                           "symbol": "Active"
                         }
                       ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABVM7P"
                     }
                   }
                 ]
@@ -3874,27 +2682,22 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationHistory"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABXEX7"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYRE5"
                   },
                   {
                     "symbol": "kyc_approved"
+                  },
+                  {
+                    "u64": "1"
                   }
                 ]
               },
               "durability": "persistent",
               "val": {
                 "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
                   {
                     "key": {
                       "symbol": "attestor"
@@ -3924,7 +2727,15 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "58ec452ede72799baf21664edc953297b592ad9e95f2381710593ad7a32f31ef"
+                      "bytes": "17eb70034b5b71092521d184c5e7b069d47de657e51aef2be11a00c115036943"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sequence"
+                    },
+                    "val": {
+                      "u64": "1"
                     }
                   },
                   {
@@ -3937,14 +2748,6 @@
                           "symbol": "Active"
                         }
                       ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABXEX7"
                     }
                   }
                 ]
@@ -3965,27 +2768,22 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationHistory"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABY5MP"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2ZMN"
                   },
                   {
                     "symbol": "kyc_approved"
+                  },
+                  {
+                    "u64": "1"
                   }
                 ]
               },
               "durability": "persistent",
               "val": {
                 "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
                   {
                     "key": {
                       "symbol": "attestor"
@@ -4015,7 +2813,15 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "79a881f99a636d0ad75f16f53668982b59f8bb96c3fbb449155fe7a08dba9cb1"
+                      "bytes": "3b28a6c3766c6295adad976d349705ef49393fbfdebe4facb5862d2cdfa285d3"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sequence"
+                    },
+                    "val": {
+                      "u64": "1"
                     }
                   },
                   {
@@ -4028,14 +2834,6 @@
                           "symbol": "Active"
                         }
                       ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABY5MP"
                     }
                   }
                 ]
@@ -4056,27 +2854,22 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationHistory"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB2VE7"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4BV5"
                   },
                   {
                     "symbol": "kyc_approved"
+                  },
+                  {
+                    "u64": "1"
                   }
                 ]
               },
               "durability": "persistent",
               "val": {
                 "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
                   {
                     "key": {
                       "symbol": "attestor"
@@ -4106,7 +2899,15 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "282a163f3e6f52ab35cf838079369bce33cf5a1f151d2822846095a6d07e1ae2"
+                      "bytes": "e084a105a7b7d599b8346d3cba5ac51b756d7e29c7ef77fd9eff31fdeae31389"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sequence"
+                    },
+                    "val": {
+                      "u64": "1"
                     }
                   },
                   {
@@ -4119,14 +2920,6 @@
                           "symbol": "Active"
                         }
                       ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB2VE7"
                     }
                   }
                 ]
@@ -4147,27 +2940,22 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationHistory"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4N5P"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6J5N"
                   },
                   {
                     "symbol": "kyc_approved"
+                  },
+                  {
+                    "u64": "1"
                   }
                 ]
               },
               "durability": "persistent",
               "val": {
                 "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
                   {
                     "key": {
                       "symbol": "attestor"
@@ -4197,7 +2985,15 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "c1c3c8fdf22e3a4adef796c8fdaf739d7d3b222f995891eb8f495ca71fb932a8"
+                      "bytes": "390b36a09502b05d4f8c27aea2636c6b7fd05b27d742ed32074ffea1f888ebe4"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sequence"
+                    },
+                    "val": {
+                      "u64": "1"
                     }
                   },
                   {
@@ -4210,14 +3006,6 @@
                           "symbol": "Active"
                         }
                       ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4N5P"
                     }
                   }
                 ]
@@ -4238,27 +3026,22 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationHistory"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB6FV7"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABB6KO"
                   },
                   {
                     "symbol": "kyc_approved"
+                  },
+                  {
+                    "u64": "1"
                   }
                 ]
               },
               "durability": "persistent",
               "val": {
                 "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
                   {
                     "key": {
                       "symbol": "attestor"
@@ -4288,7 +3071,15 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "688e94a51ee508a95e761294afb7a6004b432c15d9890c80ddf23bde8caa4c26"
+                      "bytes": "c22ceee66b8ab104483c83053173b33f992dd4fcb457284c60ef9d699a1c7059"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sequence"
+                    },
+                    "val": {
+                      "u64": "1"
                     }
                   },
                   {
@@ -4301,14 +3092,6 @@
                           "symbol": "Active"
                         }
                       ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB6FV7"
                     }
                   }
                 ]
@@ -4329,27 +3112,22 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationHistory"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBKTY"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABDWC6"
                   },
                   {
                     "symbol": "kyc_approved"
+                  },
+                  {
+                    "u64": "1"
                   }
                 ]
               },
               "durability": "persistent",
               "val": {
                 "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
                   {
                     "key": {
                       "symbol": "attestor"
@@ -4379,7 +3157,15 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "c006af35e3b4ca022ab986593a148b4f196f186168ee96604eeaa7e338e66ac1"
+                      "bytes": "8092fe01b9ce31a49ce380fc2fe1ee6b6b7d5c15c5f1ecb6ad98c60c4273a435"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sequence"
+                    },
+                    "val": {
+                      "u64": "1"
                     }
                   },
                   {
@@ -4392,14 +3178,6 @@
                           "symbol": "Active"
                         }
                       ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBKTY"
                     }
                   }
                 ]
@@ -4420,27 +3198,22 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationHistory"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACDC3I"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABFO3O"
                   },
                   {
                     "symbol": "kyc_approved"
+                  },
+                  {
+                    "u64": "1"
                   }
                 ]
               },
               "durability": "persistent",
               "val": {
                 "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
                   {
                     "key": {
                       "symbol": "attestor"
@@ -4470,7 +3243,15 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "c1a9fae908008d34f389b1dba2a1a8e8301f7a942412ef6e6299c9e27e89dfaa"
+                      "bytes": "7fde8eebf388fcff667a89be60430cc6e198b1a78cb603a39cdd09885a3336e3"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sequence"
+                    },
+                    "val": {
+                      "u64": "1"
                     }
                   },
                   {
@@ -4483,14 +3264,6 @@
                           "symbol": "Active"
                         }
                       ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACDC3I"
                     }
                   }
                 ]
@@ -4511,10 +3284,10 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationSeq"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACF2CY"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
                   },
                   {
                     "symbol": "kyc_approved"
@@ -4523,74 +3296,13 @@
               },
               "durability": "persistent",
               "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "560231689713a5933b6c8ac3e6b2f243730e49e1c6b0c610c41e8e8dad26044c"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACF2CY"
-                    }
-                  }
-                ]
+                "u64": "1"
               }
             }
           },
           "ext": "v0"
         },
-        "live_until": 518400
+        "live_until": 4095
       },
       {
         "entry": {
@@ -4602,10 +3314,10 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationSeq"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACHSKI"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK3IM"
                   },
                   {
                     "symbol": "kyc_approved"
@@ -4614,74 +3326,13 @@
               },
               "durability": "persistent",
               "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "fe5b0deca006174e2151088e1a7d60fe91819467db5d709ae5a19c01a3cd3e3f"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACHSKI"
-                    }
-                  }
-                ]
+                "u64": "1"
               }
             }
           },
           "ext": "v0"
         },
-        "live_until": 518400
+        "live_until": 4095
       },
       {
         "entry": {
@@ -4693,10 +3344,10 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationSeq"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACILRY"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMDR4"
                   },
                   {
                     "symbol": "kyc_approved"
@@ -4705,74 +3356,13 @@
               },
               "durability": "persistent",
               "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "2de44621c76edf2debbc2df62ccb52c5036b1919dca3af0c0a886cc48dbfaeba"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACILRY"
-                    }
-                  }
-                ]
+                "u64": "1"
               }
             }
           },
           "ext": "v0"
         },
-        "live_until": 518400
+        "live_until": 4095
       },
       {
         "entry": {
@@ -4784,10 +3374,10 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationSeq"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACKDZI"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOLZM"
                   },
                   {
                     "symbol": "kyc_approved"
@@ -4796,74 +3386,13 @@
               },
               "durability": "persistent",
               "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "83440636eff7b2ec0f78ef7b8e480a033e8aeb67e6ecb657ce9bcdfdb21aa744"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACKDZI"
-                    }
-                  }
-                ]
+                "u64": "1"
               }
             }
           },
           "ext": "v0"
         },
-        "live_until": 518400
+        "live_until": 4095
       },
       {
         "entry": {
@@ -4875,10 +3404,10 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationSeq"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACM3AY"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARQG5"
                   },
                   {
                     "symbol": "kyc_approved"
@@ -4887,74 +3416,13 @@
               },
               "durability": "persistent",
               "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "eaaf1805f2ec6a18eee5a7909f79908651341965d9f0b9de8d45d9262e5735ae"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACM3AY"
-                    }
-                  }
-                ]
+                "u64": "1"
               }
             }
           },
           "ext": "v0"
         },
-        "live_until": 518400
+        "live_until": 4095
       },
       {
         "entry": {
@@ -4966,10 +3434,10 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationSeq"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACOTII"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATYON"
                   },
                   {
                     "symbol": "kyc_approved"
@@ -4978,74 +3446,13 @@
               },
               "durability": "persistent",
               "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "6870f86f6560dd5b0d0a47d0ae89df6a96b6a47a6258940060d75ff759634158"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACOTII"
-                    }
-                  }
-                ]
+                "u64": "1"
               }
             }
           },
           "ext": "v0"
         },
-        "live_until": 518400
+        "live_until": 4095
       },
       {
         "entry": {
@@ -5057,10 +3464,10 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationSeq"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACRIXZ"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVAX5"
                   },
                   {
                     "symbol": "kyc_approved"
@@ -5069,74 +3476,13 @@
               },
               "durability": "persistent",
               "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "e882dd6a247f4ada1f700f1918bd23b7c730ad62af15f5cec8de976cbad09691"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACRIXZ"
-                    }
-                  }
-                ]
+                "u64": "1"
               }
             }
           },
           "ext": "v0"
         },
-        "live_until": 518400
+        "live_until": 4095
       },
       {
         "entry": {
@@ -5148,10 +3494,10 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationSeq"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACTA7J"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXI7N"
                   },
                   {
                     "symbol": "kyc_approved"
@@ -5160,74 +3506,13 @@
               },
               "durability": "persistent",
               "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "51be0458d20b1ce2ff5316e7e473109c26f5d8b457037edf8c4529f6ff82bddb"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACTA7J"
-                    }
-                  }
-                ]
+                "u64": "1"
               }
             }
           },
           "ext": "v0"
         },
-        "live_until": 518400
+        "live_until": 4095
       },
       {
         "entry": {
@@ -5239,10 +3524,10 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationSeq"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACVYGZ"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYRE5"
                   },
                   {
                     "symbol": "kyc_approved"
@@ -5251,74 +3536,13 @@
               },
               "durability": "persistent",
               "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "0f65dd2d76efb602f9554514892751d5cf336a56c3888aa8cb122e970016949a"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACVYGZ"
-                    }
-                  }
-                ]
+                "u64": "1"
               }
             }
           },
           "ext": "v0"
         },
-        "live_until": 518400
+        "live_until": 4095
       },
       {
         "entry": {
@@ -5330,10 +3554,10 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationSeq"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACXQOJ"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2ZMN"
                   },
                   {
                     "symbol": "kyc_approved"
@@ -5342,74 +3566,13 @@
               },
               "durability": "persistent",
               "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "b9098fe78517adc23218f8cd7d804f55c977fb22185a4d8e752ab7e82e5c1d89"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACXQOJ"
-                    }
-                  }
-                ]
+                "u64": "1"
               }
             }
           },
           "ext": "v0"
         },
-        "live_until": 518400
+        "live_until": 4095
       },
       {
         "entry": {
@@ -5421,10 +3584,10 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationSeq"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACYJVZ"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4BV5"
                   },
                   {
                     "symbol": "kyc_approved"
@@ -5433,74 +3596,13 @@
               },
               "durability": "persistent",
               "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "95534981420d9a1e5d3cd3b567c6e21f920742087ecf44c187e077cdc8497ac2"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACYJVZ"
-                    }
-                  }
-                ]
+                "u64": "1"
               }
             }
           },
           "ext": "v0"
         },
-        "live_until": 518400
+        "live_until": 4095
       },
       {
         "entry": {
@@ -5512,10 +3614,10 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationSeq"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC2B5J"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6J5N"
                   },
                   {
                     "symbol": "kyc_approved"
@@ -5524,74 +3626,13 @@
               },
               "durability": "persistent",
               "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "c8d26116ed30f9816a05fdf061b2535145472f388d9814e96f33f08369dbcbd0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC2B5J"
-                    }
-                  }
-                ]
+                "u64": "1"
               }
             }
           },
           "ext": "v0"
         },
-        "live_until": 518400
+        "live_until": 4095
       },
       {
         "entry": {
@@ -5603,10 +3644,10 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationSeq"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC4ZEZ"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABB6KO"
                   },
                   {
                     "symbol": "kyc_approved"
@@ -5615,74 +3656,13 @@
               },
               "durability": "persistent",
               "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "ae3c8b8d99a39542f78af83dbbb42c81cd94199ec1b5f60a0801063e95842570"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC4ZEZ"
-                    }
-                  }
-                ]
+                "u64": "1"
               }
             }
           },
           "ext": "v0"
         },
-        "live_until": 518400
+        "live_until": 4095
       },
       {
         "entry": {
@@ -5694,10 +3674,10 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationSeq"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC6RMJ"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABDWC6"
                   },
                   {
                     "symbol": "kyc_approved"
@@ -5706,74 +3686,13 @@
               },
               "durability": "persistent",
               "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "d596e806d34bd7d4304b9f00ec340f02fa90c4faa17fe39729cb15c76e0de77f"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC6RMJ"
-                    }
-                  }
-                ]
+                "u64": "1"
               }
             }
           },
           "ext": "v0"
         },
-        "live_until": 518400
+        "live_until": 4095
       },
       {
         "entry": {
@@ -5785,101 +3704,10 @@
               "key": {
                 "vec": [
                   {
-                    "symbol": "Attestation"
+                    "symbol": "AttestationSeq"
                   },
                   {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBG3K"
-                  },
-                  {
-                    "symbol": "kyc_approved"
-                  }
-                ]
-              },
-              "durability": "persistent",
-              "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "552d7d672c5bbbccfb210a425e36a1d65bc663d3d3c395114c8ebc9c7cf28394"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBG3K"
-                    }
-                  }
-                ]
-              }
-            }
-          },
-          "ext": "v0"
-        },
-        "live_until": 518400
-      },
-      {
-        "entry": {
-          "last_modified_ledger_seq": 0,
-          "data": {
-            "contract_data": {
-              "ext": "v0",
-              "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-              "key": {
-                "vec": [
-                  {
-                    "symbol": "Attestation"
-                  },
-                  {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADDOT2"
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABFO3O"
                   },
                   {
                     "symbol": "kyc_approved"
@@ -5888,165 +3716,13 @@
               },
               "durability": "persistent",
               "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "5a05f87d329a8321f2006f4f3b11b810aeddcd21cb383b61df03824074eaffc9"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADDOT2"
-                    }
-                  }
-                ]
+                "u64": "1"
               }
             }
           },
           "ext": "v0"
         },
-        "live_until": 518400
-      },
-      {
-        "entry": {
-          "last_modified_ledger_seq": 0,
-          "data": {
-            "contract_data": {
-              "ext": "v0",
-              "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-              "key": {
-                "vec": [
-                  {
-                    "symbol": "Attestation"
-                  },
-                  {
-                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADFWKK"
-                  },
-                  {
-                    "symbol": "kyc_approved"
-                  }
-                ]
-              },
-              "durability": "persistent",
-              "val": {
-                "map": [
-                  {
-                    "key": {
-                      "symbol": "attestation_type"
-                    },
-                    "val": {
-                      "symbol": "kyc_approved"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "attestor"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "expires_at"
-                    },
-                    "val": {
-                      "u64": "86400"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "issued_at"
-                    },
-                    "val": {
-                      "u64": "0"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "payload_hash"
-                    },
-                    "val": {
-                      "bytes": "daceee899cdb68711b2b16b1708d684b193062163a2ef8ca80e5a3f002212822"
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "status"
-                    },
-                    "val": {
-                      "vec": [
-                        {
-                          "symbol": "Active"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "key": {
-                      "symbol": "subject"
-                    },
-                    "val": {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADFWKK"
-                    }
-                  }
-                ]
-              }
-            }
-          },
-          "ext": "v0"
-        },
-        "live_until": 518400
+        "live_until": 4095
       },
       {
         "entry": {
@@ -6111,7 +3787,7 @@
                         ]
                       },
                       "val": {
-                        "u64": "47"
+                        "u64": "15"
                       }
                     },
                     {

@@ -60,6 +60,12 @@ fn long_lived_attestation_buys_the_network_maximum_window() {
     let kind = Symbol::new(&s.env, "kyc_approved");
     let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"payload"));
     let two_years = ONE_DAY * 365 * 2;
+    // Raise the default max attestation TTL above the two-year request:
+    // that business-rule cap (see max_ttl_tests.rs) is orthogonal to the
+    // storage-rent ceiling this test exercises, but without this the
+    // attest call below would fail with ExceedsMaxTtl before ever reaching
+    // the storage-TTL-bump logic.
+    s.client.set_default_max_attestation_ttl(&(ONE_DAY * 365 * 3));
     s.client.attest(&attestor, &subject, &kind, &hash, &two_years);
 
     let ttl = attestation_ttl(&s, &subject, &kind);
@@ -82,6 +88,8 @@ fn renew_attestation_extends_storage_ttl_again() {
     let kind = Symbol::new(&s.env, "kyc_approved");
     let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"payload"));
     let two_years = ONE_DAY * 365 * 2;
+    // See the matching comment in `long_lived_attestation_buys_the_network_maximum_window`.
+    s.client.set_default_max_attestation_ttl(&(ONE_DAY * 365 * 3));
     s.client.attest(&attestor, &subject, &kind, &hash, &two_years);
 
     // Advance close to (but before) the storage TTL bought at `attest`

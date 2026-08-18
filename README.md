@@ -58,17 +58,16 @@ it carries, so its per-entry cost drops as the batch grows. Measured with
 
 | Batch size | CPU / entry, individual `attest` | CPU / entry, `attest_batch` | Savings |
 |---:|---:|---:|---:|
-| 1  | 153,249 | 155,785 | -1.7% (batching overhead costs more than there is to amortize) |
-| 2  | 157,664 | 117,415 | 25.5% |
-| 5  | 163,453 |  95,316 | 41.7% |
-| 10 | 172,847 |  91,813 | 46.9% |
-| 20 | 186,799 |  95,535 | 48.9% |
-| 40 | 212,585 | 107,091 | 49.6% |
+| 1  | 256,296 | 258,832 | -1.0% (batching overhead costs more than there is to amortize) |
+| 2  | 263,644 | 225,141 | 14.6% |
+| 5  | 287,105 | 222,145 | 22.6% |
+| 10 | 316,579 | 244,422 | 22.8% |
+| 15 | 343,728 | 271,740 | 20.9% |
 
-Savings climb fast up to a batch of ~10 (46.9%) and then flatten out,
-approaching but never reaching 50% — that's the fixed-cost share of a single
-`attest` call. Batching more than ~10-20 entries at once buys very little
-extra per-entry savings.
+Savings climb up to a batch of ~10 (22.8%) and then flatten out. Batch sizes
+above 15 aren't measured here because they fall past the ledger footprint
+ceiling described below, so amortization can't be observed past that point
+under the test host's default limits anyway.
 
 ## Storage rent & TTL
 
@@ -88,16 +87,18 @@ data doesn't archive out from under a still-valid attestation or attestor.
 See [`docs/storage-rent-cost-analysis.md`](docs/storage-rent-cost-analysis.md)
 for the full worked cost comparison and rationale.
 
-**Hard ceiling, not just a cost curve:** each attestation occupies two
-ledger footprint slots (its data entry and its TTL/rent entry), and Soroban
-caps total footprint entries per invocation (100 under the test host's
+**Hard ceiling, not just a cost curve:** each attestation entry writes three
+separate persistent keys (`Attestation`, `AttestationSeq`, and
+`AttestationHistory` -- see
+[`docs/attestation-history-rent-cost.md`](docs/attestation-history-rent-cost.md)),
+and Soroban caps total footprint entries per invocation (100 under the test host's
 mainnet-equivalent default). That puts a hard wall on batch size regardless
-of gas budget: **47 entries succeeds, 48 fails** with a host-level
+of gas budget: **15 entries succeeds, 16 fails** with a host-level
 `"total footprint ledger entries: 102 > 100"` trap that `attest_batch`
 can't turn into a graceful `Error` — it's enforced by the host below the
 contract. Real transactions carry additional footprint of their own (fee
-bump, source account, etc.), so treat 47 as an optimistic upper bound, not
-a safe one; callers should batch in chunks well under it (the ~10-20 range
+bump, source account, etc.), so treat 15 as an optimistic upper bound, not
+a safe one; callers should batch in chunks well under it (the ~10 range
 above captures nearly all the gas savings anyway). See
 `batch_gas_benchmark::attest_batch_stays_under_the_ledger_write_ceiling` and
 `batch_gas_benchmark::batch_amortizes_fixed_overhead`.

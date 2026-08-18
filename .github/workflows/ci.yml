@@ -111,11 +111,13 @@ jobs:
         run: cargo install cargo-fuzz
 
       - name: Run fuzz_attest_args (60 seconds)
-        working-directory: ./fuzz
+        # cargo-fuzz resolves its `fuzz/` directory relative to the crate
+        # root it's invoked from, so running it from inside `./fuzz` itself
+        # makes it look for a nonexistent `./fuzz/fuzz/Cargo.toml`. Run from
+        # the repo root instead, same as a local `cargo fuzz run` invocation.
         run: cargo fuzz run fuzz_attest_args -- -max_total_time=60
 
       - name: Run fuzz_revoke_args (60 seconds)
-        working-directory: ./fuzz
         run: cargo fuzz run fuzz_revoke_args -- -max_total_time=60
 
   # ---------------------------------------------------------------------------

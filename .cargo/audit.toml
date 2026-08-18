@@ -1,0 +1,7 @@
+[advisories]
+# `paste` is unmaintained (not a vulnerability) and pulled in transitively by
+# soroban-env-host's own dependency tree (ark-ff, wasmi_core), not a direct
+# or upgradeable dependency of this crate. See the matching entry and
+# rationale in deny.toml -- cargo-deny and cargo-audit use separate advisory
+# databases and separate ignore mechanisms, so both need this listed.
+ignore = ["RUSTSEC-2024-0436"]

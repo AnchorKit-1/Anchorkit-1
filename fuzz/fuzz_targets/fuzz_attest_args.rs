@@ -67,7 +67,7 @@ fuzz_target!(|data: &[u8]| {
             // Create 32-byte hash from the attestor seed
             let mut hash_bytes = [0u8; 32];
             hash_bytes[0..8].copy_from_slice(&attestor_seed.to_le_bytes());
-            let payload_hash = BytesN::<32>::from_array(&env, hash_bytes);
+            let payload_hash = BytesN::<32>::from_array(&env, &hash_bytes);
 
             // Try to create symbol from arbitrary data
             // Symbol names can contain any byte sequence, but they have length limits
