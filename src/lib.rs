@@ -61,6 +61,9 @@ mod wasm_artifact_path;
 #[cfg(test)]
 mod attestation_model_proptest;
 
+#[cfg(test)]
+mod invariant_state_machine_proptest;
+
 #[cfg(all(test, feature = "stress-tests"))]
 mod attestor_stress_tests;
 
