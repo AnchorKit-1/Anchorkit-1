@@ -122,12 +122,16 @@ fn revoke_with_very_long_symbol_name_should_not_panic() {
     let subject = Address::generate(&s.env);
     s.client.add_attestor(&attestor);
 
-    // Create a very long symbol name
+    // `Symbol::new` has no fallible API and panics for input over its
+    // documented 32-character limit, so an untruncated 1000-char name can
+    // never reach `attest` at all -- mirror the truncation the fuzz harness
+    // (`fuzz/fuzz_targets/fuzz_attest_args.rs`) applies before constructing
+    // a Symbol from untrusted input, then exercise attest with the
+    // resulting maximal-length symbol.
     let long_name = "x".repeat(1000);
-    let kind = Symbol::new(&s.env, &long_name);
     let hash = compute_payload_hash(&s.env, &Bytes::from_slice(&s.env, b"payload"));
-    // Attempt with overly long symbol
     let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let kind = Symbol::new(&s.env, &long_name[..32]);
         let _ = s.client.try_attest(&attestor, &subject, &kind, &hash, &ONE_DAY);
     }));
     // Should not panic

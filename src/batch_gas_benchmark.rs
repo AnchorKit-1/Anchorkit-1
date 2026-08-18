@@ -24,7 +24,11 @@ use crate::test_util::setup;
 use crate::types::BatchAttestEntry;
 
 const ONE_DAY: u64 = 24 * 60 * 60;
-const BATCH_SIZES: &[u32] = &[1, 2, 5, 10, 20, 40];
+// Kept under the ledger-footprint ceiling documented on
+// `attest_batch_stays_under_the_ledger_write_ceiling` below (currently 15
+// entries) -- a larger size here would hit the same host-level footprint
+// trap this benchmark is trying to measure around, not a benchmark result.
+const BATCH_SIZES: &[u32] = &[1, 2, 5, 10, 15];
 
 fn batch_entries(s: &crate::test_util::Setup<'_>, n: u32, kind: &Symbol) -> Vec<BatchAttestEntry> {
     let mut entries = Vec::new(&s.env);
@@ -121,24 +125,25 @@ fn batch_amortizes_fixed_overhead() {
     }
 }
 
-/// Each attestation entry occupies two ledger footprint slots (the data
-/// entry and its TTL/rent entry), plus a handful of fixed slots shared by
-/// the whole invocation (the attestor allow-list read, the contract
-/// instance, etc.), and Soroban caps total footprint entries per invocation
-/// (the test host defaults to the mainnet-equivalent limit of 100). That
-/// makes batch size a hard wall, not just a cost curve: past some N, no
-/// amount of budget helps because the invocation is rejected before it
-/// runs, with a host trap rather than an `Error` the caller can handle
-/// gracefully (`try_attest_batch` doesn't catch it either -- footprint
-/// limits are enforced by the host below the contract, not by anything
-/// `attest_batch` itself returns).
+/// Each attestation entry writes three separate persistent keys --
+/// `Attestation`, `AttestationSeq`, and `AttestationHistory` (see
+/// `record_attestation` in contract.rs, which both stores the attestation
+/// and appends a history entry for it) -- plus a handful of fixed slots
+/// shared by the whole invocation (the attestor allow-list read, the
+/// contract instance, etc.), and Soroban caps total footprint entries per
+/// invocation (the test host defaults to the mainnet-equivalent limit of
+/// 100). That makes batch size a hard wall, not just a cost curve: past
+/// some N, no amount of budget helps because the invocation is rejected
+/// before it runs, with a host trap rather than an `Error` the caller can
+/// handle gracefully (`try_attest_batch` doesn't catch it either --
+/// footprint limits are enforced by the host below the contract, not by
+/// anything `attest_batch` itself returns).
 ///
-/// Bisecting locally found the wall at exactly 48 entries under the test
-/// host's default limits: 47 succeeds (100 footprint entries, right at the
-/// cap), 48 fails ("total footprint ledger entries: 102 > 100"). Real
-/// transactions add their own footprint (fee bump, source account, etc.),
-/// so treat 47 as an optimistic upper bound, not a safe operating ceiling
-/// -- see the README note.
+/// Bisecting locally found the wall at exactly 16 entries under the test
+/// host's default limits: 15 succeeds, 16 fails ("total footprint ledger
+/// entries: 102 > 100"). Real transactions add their own footprint (fee
+/// bump, source account, etc.), so treat 15 as an optimistic upper bound,
+/// not a safe operating ceiling -- see the README note.
 #[test]
 fn attest_batch_stays_under_the_ledger_write_ceiling() {
     let s = setup();
@@ -146,7 +151,7 @@ fn attest_batch_stays_under_the_ledger_write_ceiling() {
     s.client.add_attestor(&attestor);
     let kind = Symbol::new(&s.env, "kyc_approved");
 
-    let entries = batch_entries(&s, 47, &kind);
+    let entries = batch_entries(&s, 15, &kind);
     s.client.attest_batch(&attestor, &entries);
-    assert_eq!(s.client.get_attestation_count(), 47);
+    assert_eq!(s.client.get_attestation_count(), 15);
 }
