@@ -58,6 +58,9 @@ mod max_ttl_tests;
 #[cfg(test)]
 mod wasm_artifact_path;
 
+#[cfg(test)]
+mod invariant_state_machine_proptest;
+
 #[cfg(all(test, feature = "stress-tests"))]
 mod attestor_stress_tests;
 
