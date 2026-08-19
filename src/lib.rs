@@ -64,6 +64,9 @@ mod attestation_model_proptest;
 #[cfg(test)]
 mod invariant_state_machine_proptest;
 
+#[cfg(test)]
+mod ttl_overflow_proptest;
+
 #[cfg(all(test, feature = "stress-tests"))]
 mod attestor_stress_tests;
 
