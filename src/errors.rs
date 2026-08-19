@@ -19,4 +19,5 @@ pub enum Error {
     EmptyBatch = 12,
     ExceedsMaxTtl = 13,
     InvalidPagination = 14,
+    AttestationTypeTooLong = 15,
 }
