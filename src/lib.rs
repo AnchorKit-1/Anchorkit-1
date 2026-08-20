@@ -7,6 +7,7 @@ mod events;
 pub mod hash;
 mod storage;
 mod types;
+mod multisig;
 
 pub use contract::{AnchorKitContract, AnchorKitContractClient};
 pub use errors::Error;
@@ -54,6 +55,9 @@ mod pause_tests;
 
 #[cfg(test)]
 mod max_ttl_tests;
+
+#[cfg(test)]
+mod multisig_tests;
 
 #[cfg(test)]
 mod wasm_artifact_path;

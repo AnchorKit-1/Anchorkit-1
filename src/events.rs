@@ -95,6 +95,12 @@ pub struct MaxAttestationTtlChanged {
     pub max_ttl_seconds: u64,
 }
 
+#[contractevent(topics = ["signers_rotate"])]
+#[derive(Clone, Debug)]
+pub struct SignersRotated {
+    pub new_threshold: u32,
+}
+
 pub fn initialized(env: &Env, admin: &Address) {
     Initialized {
         admin: admin.clone(),
@@ -186,4 +192,8 @@ pub fn max_attestation_ttl_changed(env: &Env, attestation_type: &Symbol, max_ttl
         max_ttl_seconds,
     }
     .publish(env);
+}
+
+pub fn signers_rotated(env: &Env, new_threshold: u32) {
+    SignersRotated { new_threshold }.publish(env);
 }
