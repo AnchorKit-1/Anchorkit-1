@@ -28,6 +28,9 @@ pub enum DataKey {
     MaxAttestationTtl(Symbol),
     /// Default maximum TTL in seconds for attestations when no per-type override is set.
     DefaultMaxAttestationTtl,
+    /// Schema version of this contract instance for migration tracking.
+    /// Tracks which schema version the storage was migrated to.
+    SchemaVersion,
 }
 
 /// Lifecycle state of an attestation.

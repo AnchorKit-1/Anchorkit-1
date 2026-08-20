@@ -8,6 +8,7 @@ pub mod hash;
 mod storage;
 mod types;
 mod multisig;
+mod migrations;
 
 pub use contract::{AnchorKitContract, AnchorKitContractClient};
 pub use errors::Error;
@@ -58,6 +59,9 @@ mod max_ttl_tests;
 
 #[cfg(test)]
 mod multisig_tests;
+
+#[cfg(test)]
+mod migration_tests;
 
 #[cfg(test)]
 mod wasm_artifact_path;

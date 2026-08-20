@@ -101,6 +101,13 @@ pub struct SignersRotated {
     pub new_threshold: u32,
 }
 
+#[contractevent(topics = ["schema_migrated"])]
+#[derive(Clone, Debug)]
+pub struct SchemaMigrated {
+    pub from_version: u32,
+    pub to_version: u32,
+}
+
 pub fn initialized(env: &Env, admin: &Address) {
     Initialized {
         admin: admin.clone(),
@@ -196,4 +203,12 @@ pub fn max_attestation_ttl_changed(env: &Env, attestation_type: &Symbol, max_ttl
 
 pub fn signers_rotated(env: &Env, new_threshold: u32) {
     SignersRotated { new_threshold }.publish(env);
+}
+
+pub fn schema_migrated(env: &Env, from_version: u32, to_version: u32) {
+    SchemaMigrated {
+        from_version,
+        to_version,
+    }
+    .publish(env);
 }
