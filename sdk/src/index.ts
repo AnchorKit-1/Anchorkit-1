@@ -49,3 +49,7 @@ export type {
   WatcherState,
   AnchorStreamCapability,
 } from './types/sep6';
+
+// Rate limiting
+export { RateLimiter, RateLimiterConfigError } from './services/rateLimiter';
+export type { RateLimitConfig, RateLimitState, RateLimitStatus } from './types/rateLimit';
