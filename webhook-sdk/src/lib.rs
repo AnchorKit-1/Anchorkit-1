@@ -57,6 +57,7 @@
 //! }
 //! ```
 
+pub mod circuit_breaker;
 pub mod dead_letter;
 pub mod delivery;
 pub mod errors;
@@ -67,6 +68,7 @@ pub mod retry;
 pub mod types;
 pub mod verification;
 
+pub use circuit_breaker::{CircuitBreakerConfig, CircuitBreakerRegistry, CircuitState};
 pub use dead_letter::DeadLetterQueue;
 pub use delivery::WebhookDeliverer;
 pub use errors::{Result, WebhookError};

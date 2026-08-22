@@ -9,6 +9,12 @@ pub enum WebhookError {
     #[error("Max retries exceeded")]
     MaxRetriesExceeded,
 
+    /// The circuit breaker for this destination is open (or a half-open
+    /// probe is already in flight), so the call was short-circuited
+    /// without touching the network.
+    #[error("Circuit breaker open: refusing to call a repeatedly failing destination")]
+    CircuitOpen,
+
     #[error("Invalid webhook URL: {0}")]
     InvalidWebhookUrl(String),
 

@@ -138,12 +138,9 @@ mod tests {
         let result2 = processor.process(delivery2).await;
 
         // Both should have same idempotency key
-        match (result1, result2) {
-            (Err(_), Err(_)) => {
-                // Both failed, but that's expected with invalid URLs
-                // The important test is that they have the same key
-            }
-            _ => {}
+        if let (Err(_), Err(_)) = (result1, result2) {
+            // Both failed, but that's expected with invalid URLs
+            // The important test is that they have the same key
         }
     }
 
