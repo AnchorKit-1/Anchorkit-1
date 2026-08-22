@@ -7,6 +7,8 @@ mod events;
 pub mod hash;
 mod storage;
 mod types;
+mod multisig;
+mod migrations;
 
 pub use contract::{AnchorKitContract, AnchorKitContractClient};
 pub use errors::Error;
@@ -56,6 +58,12 @@ mod pause_tests;
 mod max_ttl_tests;
 
 #[cfg(test)]
+mod multisig_tests;
+
+#[cfg(test)]
+mod migration_tests;
+
+#[cfg(test)]
 mod wasm_artifact_path;
 
 #[cfg(test)]
@@ -69,6 +77,9 @@ mod ttl_overflow_proptest;
 
 #[cfg(all(test, feature = "stress-tests"))]
 mod attestor_stress_tests;
+
+#[cfg(all(test, feature = "stress-tests"))]
+mod attest_storage_load_tests;
 
 #[cfg(all(test, feature = "testnet-integration"))]
 mod testnet_integration_tests;

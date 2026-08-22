@@ -20,4 +20,12 @@ pub enum Error {
     ExceedsMaxTtl = 13,
     InvalidPagination = 14,
     AttestationTypeTooLong = 15,
+    // Multi-sig errors
+    InvalidThreshold = 16,
+    SignerNotFound = 17,
+    DuplicateSigner = 18,
+    InsufficientSignatures = 19,
+    InvalidSignature = 20,
+    EmptySignerList = 21,
+    DuplicateSignature = 22,
 }

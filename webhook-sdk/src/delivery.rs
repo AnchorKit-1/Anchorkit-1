@@ -1,5 +1,6 @@
 use crate::circuit_breaker::CircuitBreakerRegistry;
 use crate::errors::{Result, WebhookError};
+use crate::logging::LoggingConfig;
 use crate::retry::RetryConfig;
 use crate::types::WebhookDelivery;
 use chrono::Utc;
@@ -97,15 +98,31 @@ impl WebhookDeliverer {
     }
 
     async fn send(&self, delivery: &WebhookDelivery) -> Result<(u16, Option<String>)> {
-        let response = self
-            .client
-            .post(&delivery.url)
-            .json(&delivery.payload)
-            .send()
-            .await?;
+        let mut headers = BTreeMap::new();
+        headers.insert("content-type".to_string(), "application/json".to_string());
+
+        if let Some(logging) = &self.logging {
+            logging.log_request("POST", &delivery.url, &headers, &delivery.payload);
+        }
+
+        let result = self.client.post(&delivery.url).json(&delivery.payload).send().await;
+
+        let response = match result {
+            Ok(response) => response,
+            Err(e) => {
+                if let Some(logging) = &self.logging {
+                    logging.log_response(&delivery.url, None, None, Some(&e.to_string()));
+                }
+                return Err(e.into());
+            }
+        };
 
         let status = response.status().as_u16();
         let body = response.text().await.ok();
+
+        if let Some(logging) = &self.logging {
+            logging.log_response(&delivery.url, Some(status), body.as_deref(), None);
+        }
 
         if (200..300).contains(&status) {
             Ok((status, body))

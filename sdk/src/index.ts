@@ -1,5 +1,19 @@
 // Main entry point for @anchorkit/sdk
 
+// Hot-reload config support
+export {
+  ConfigManager,
+  ConfigValidationError,
+  validateAnchorConfig,
+  composeValidators,
+} from './config/index';
+export type {
+  AnchorConfig,
+  ConfigValidator,
+  ValidationResult,
+  ConfigChangeListener,
+} from './config/index';
+
 export { Sep10Flow } from './components/Sep10Flow/Sep10Flow';
 export { Sep10Service, Sep10ServiceError } from './services/sep10';
 export type { Sep10FlowProps } from './components/Sep10Flow/Sep10Flow';
@@ -35,3 +49,7 @@ export type {
   WatcherState,
   AnchorStreamCapability,
 } from './types/sep6';
+
+// Rate limiting
+export { RateLimiter, RateLimiterConfigError } from './services/rateLimiter';
+export type { RateLimitConfig, RateLimitState, RateLimitStatus } from './types/rateLimit';

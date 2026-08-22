@@ -4,8 +4,10 @@ use soroban_sdk::{contracttype, Address, BytesN, Symbol};
 #[contracttype]
 #[derive(Clone)]
 pub enum DataKey {
-    /// The contract administrator.
+    /// The contract administrator (kept for backward compatibility; see MultiSigConfig).
     Admin,
+    /// Multi-signature governance configuration (threshold, signers, nonce).
+    MultiSigConfig,
     /// Whether new attestations are currently accepted.
     Paused,
     /// Allow-list membership for an attestor address.
@@ -26,6 +28,9 @@ pub enum DataKey {
     MaxAttestationTtl(Symbol),
     /// Default maximum TTL in seconds for attestations when no per-type override is set.
     DefaultMaxAttestationTtl,
+    /// Schema version of this contract instance for migration tracking.
+    /// Tracks which schema version the storage was migrated to.
+    SchemaVersion,
 }
 
 /// Lifecycle state of an attestation.
@@ -77,4 +82,24 @@ pub struct HistoryEntry {
     pub issued_at: u64,
     pub expires_at: u64,
     pub status: AttestationStatus,
+}
+
+/// Multi-signature governance configuration: stores the set of authorized
+/// signers and the threshold (M) required to authorize admin operations.
+/// The nonce prevents replay attacks across signer rotation boundaries.
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct MultiSigConfig {
+    pub signers: soroban_sdk::Vec<Address>,
+    pub threshold: u32,
+    pub nonce: u64,
+}
+
+/// Holds signature data passed by caller for admin operations that require
+/// multi-signature authorization.
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct SignatureInfo {
+    pub signers: soroban_sdk::Vec<Address>,
+    pub signatures: soroban_sdk::Vec<soroban_sdk::Bytes>,
 }

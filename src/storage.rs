@@ -1,7 +1,7 @@
 use soroban_sdk::{Address, Env, Symbol, Vec};
 
 use crate::errors::Error;
-use crate::types::{Attestation, DataKey, HistoryEntry};
+use crate::types::{Attestation, DataKey, HistoryEntry, MultiSigConfig};
 
 // --- Persistent storage rent model ---------------------------------------
 //
@@ -310,6 +310,35 @@ pub fn set_max_attestation_ttl(env: &Env, attestation_type: &Symbol, max_ttl_sec
     env.storage()
         .instance()
         .set(&key, &max_ttl_seconds);
+}
+
+// --- Multi-signature governance storage ---
+
+pub fn get_multisig_config(env: &Env) -> Result<MultiSigConfig, Error> {
+    env.storage()
+        .instance()
+        .get(&DataKey::MultiSigConfig)
+        .ok_or(Error::NotInitialized)
+}
+
+pub fn set_multisig_config(env: &Env, config: &MultiSigConfig) {
+    env.storage().instance().set(&DataKey::MultiSigConfig, config);
+}
+
+pub fn has_multisig_config(env: &Env) -> bool {
+    env.storage().instance().has(&DataKey::MultiSigConfig)
+}
+
+// --- Schema version tracking for migrations ---
+
+pub fn get_schema_version(env: &Env) -> Option<u32> {
+    env.storage()
+        .instance()
+        .get(&DataKey::SchemaVersion)
+}
+
+pub fn set_schema_version(env: &Env, version: u32) {
+    env.storage().instance().set(&DataKey::SchemaVersion, &version);
 }
 
 #[cfg(test)]
