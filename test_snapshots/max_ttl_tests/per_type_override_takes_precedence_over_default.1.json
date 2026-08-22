@@ -86,7 +86,7 @@
                   "symbol": "kyc"
                 },
                 {
-                  "bytes": "21d7254c6496e5182904aa7d41d13e503aa4f7bb81900560da207d19ded93e34"
+                  "bytes": "16d008f3b177ec9a4ab49b1809d2ab7f0996a0747fc9df32b552fd05b26bece3"
                 },
                 {
                   "u64": "2591999"
@@ -170,7 +170,7 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "21d7254c6496e5182904aa7d41d13e503aa4f7bb81900560da207d19ded93e34"
+                      "bytes": "16d008f3b177ec9a4ab49b1809d2ab7f0996a0747fc9df32b552fd05b26bece3"
                     }
                   },
                   {
@@ -256,7 +256,7 @@
                       "symbol": "payload_hash"
                     },
                     "val": {
-                      "bytes": "21d7254c6496e5182904aa7d41d13e503aa4f7bb81900560da207d19ded93e34"
+                      "bytes": "16d008f3b177ec9a4ab49b1809d2ab7f0996a0747fc9df32b552fd05b26bece3"
                     }
                   },
                   {

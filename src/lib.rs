@@ -78,5 +78,8 @@ mod ttl_overflow_proptest;
 #[cfg(all(test, feature = "stress-tests"))]
 mod attestor_stress_tests;
 
+#[cfg(all(test, feature = "stress-tests"))]
+mod attest_storage_load_tests;
+
 #[cfg(all(test, feature = "testnet-integration"))]
 mod testnet_integration_tests;
