@@ -53,3 +53,8 @@ export type {
 // Rate limiting
 export { RateLimiter, RateLimiterConfigError } from './services/rateLimiter';
 export type { RateLimitConfig, RateLimitState, RateLimitStatus } from './types/rateLimit';
+
+// Retry configuration
+export { RetryConfig, RetryConfigError } from './services/retryConfig';
+export type { RetryOptions } from './types/retry';
+

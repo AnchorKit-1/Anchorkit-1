@@ -16,9 +16,9 @@
     }
   },
   "scripts": {
-    "dev": "storybook dev -p 6006",
-    "build": "tsc --build",
-    "build:storybook": "storybook build",
+    "dev": "node init && storybook dev -p 6006",
+    "build": "node init && tsc --build",
+    "build:storybook": "node init && storybook build",
     "test": "vitest",
     "lint": "eslint src --ext .ts,.tsx"
   },

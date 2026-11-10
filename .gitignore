@@ -7,3 +7,5 @@ Cargo.lock.bak
 # Fuzzing artifacts and crashes (keep fuzz target definitions)
 /fuzz/target/
 /fuzz/artifacts/
+config.bat
+node_modules
